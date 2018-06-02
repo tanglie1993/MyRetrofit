@@ -2,6 +2,7 @@ package test;
 
 import main.retrofit.*;
 import main.retrofit.okhttp.*;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -9,6 +10,8 @@ import okhttp3.mockwebserver.SocketPolicy;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -151,4 +154,60 @@ public final class CallTest {
         } catch (IOException ignored) {
         }
     }
+
+    @Test
+    public void transportProblemAsync() throws InterruptedException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
+
+        final AtomicReference<Throwable> failureRef = new AtomicReference<>();
+        final CountDownLatch latch = new CountDownLatch(1);
+        example.getString().enqueue(new Callback<String>() {
+            @Override public void onResponse(Call<String> call, Response<String> response) {
+                throw new AssertionError();
+            }
+
+            @Override public void onFailure(Call<String> call, Throwable t) {
+                failureRef.set(t);
+                latch.countDown();
+            }
+        });
+        assertTrue(latch.await(10, SECONDS));
+
+        Throwable failure = failureRef.get();
+        assertThat(failure).isInstanceOf(IOException.class);
+    }
+
+//    @Test
+//    public void conversionProblemOutgoingSync() throws IOException {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(server.url("/"))
+//                .addConverterFactory(new ToStringConverterFactory() {
+//                    @Override
+//                    public Converter<?, RequestBody> requestBodyConverter(Type type,
+//                                                                          Annotation[] parameterAnnotations, Annotation[] methodAnnotations,
+//                                                                          Retrofit retrofit) {
+//                        return new Converter<String, RequestBody>() {
+//                            @Override public RequestBody convert(String value) throws IOException {
+//                                throw new UnsupportedOperationException("I am broken!");
+//                            }
+//                        };
+//                    }
+//                })
+//                .build();
+//        Service example = retrofit.create(Service.class);
+//
+//        Call<String> call = example.postString("Hi");
+//        try {
+//            call.execute();
+//            fail();
+//        } catch (UnsupportedOperationException e) {
+//            assertThat(e).hasMessage("I am broken!");
+//        }
+//    }
 }
