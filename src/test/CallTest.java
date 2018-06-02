@@ -5,6 +5,7 @@ import main.retrofit.okhttp.*;
 import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.SocketPolicy;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 public final class CallTest {
@@ -130,5 +132,23 @@ public final class CallTest {
         assertThat(response.isSuccessful()).isFalse();
         assertThat(response.code()).isEqualTo(404);
         assertThat(response.errorBody().string()).isEqualTo("Hi");
+    }
+
+    @Test
+    public void transportProblemSync() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
+
+        Call<String> call = example.getString();
+        try {
+            call.execute();
+            fail();
+        } catch (IOException ignored) {
+        }
     }
 }
