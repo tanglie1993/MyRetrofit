@@ -98,8 +98,8 @@ public class Retrofit {
                                 if(method!= null && method.equals("POST")){
                                     try {
                                         request.newBuilder().method("POST", requestBodyConverter.convert(body));
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
+                                    } catch (Exception e) {
+                                        callback.onFailure(thisCall, e);
                                     }
                                 }
                                 okhttp3.Call okhttpCall = client.newCall(request);
