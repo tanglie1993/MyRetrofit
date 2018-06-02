@@ -1,2 +1,6 @@
 
 *.class
+*.jar
+.idea/uiDesigner.xml
+.idea/libraries/org_assertj_assertj_core_2_0_0.xml
+.idea/libraries/com_squareup_okhttp3_benchmarks_3_3_1.xml
