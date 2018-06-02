@@ -84,4 +84,21 @@ public final class CallTest {
         assertThat(response.isSuccessful()).isTrue();
         assertThat(response.body()).isEqualTo("Hi");
     }
+
+
+    @Test
+    public void http404Sync() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("Hi"));
+
+        Response<String> response = example.getString().execute();
+        assertThat(response.isSuccessful()).isFalse();
+        assertThat(response.code()).isEqualTo(404);
+        assertThat(response.errorBody().string()).isEqualTo("Hi");
+    }
 }

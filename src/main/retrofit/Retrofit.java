@@ -3,6 +3,7 @@ package main.retrofit;
 import main.retrofit.okhttp.GET;
 import main.retrofit.okhttp.Streaming;
 import okhttp3.*;
+import okio.BufferedSource;
 import test.CallTest;
 
 import java.io.IOException;
@@ -46,7 +47,11 @@ public class Retrofit {
                                     @Override
                                     public Response<String> execute() throws IOException {
                                         okhttp3.Response rawResponse = client.newCall(request).execute();
-                                        return new Response<String>(rawResponse, rawResponse.body().string(), rawResponse.body());
+                                        if(rawResponse.isSuccessful()){
+                                            return new Response<String>(rawResponse, rawResponse.body().string(), null);
+                                        }else{
+                                            return new Response<String>(rawResponse, null, rawResponse.body());
+                                        }
                                     }
 
                                     @Override
@@ -60,7 +65,22 @@ public class Retrofit {
 
                                             @Override
                                             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                                                callback.onResponse(thisCall, new Response<String>(response, response.body().string(), response.body()));
+                                                callback.onResponse(thisCall, new Response<String>(response, response.body().string(), new ResponseBody() {
+                                                    @Override
+                                                    public MediaType contentType() {
+                                                        return null;
+                                                    }
+
+                                                    @Override
+                                                    public long contentLength() {
+                                                        return 0;
+                                                    }
+
+                                                    @Override
+                                                    public BufferedSource source() {
+                                                        return null;
+                                                    }
+                                                }));
                                             }
                                         });
                                     }

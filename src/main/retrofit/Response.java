@@ -1,7 +1,6 @@
 package main.retrofit;
 
 
-import com.sun.istack.internal.Nullable;
 import okhttp3.ResponseBody;
 
 
@@ -24,5 +23,13 @@ public class Response<T> {
 
     public T body() {
         return body;
+    }
+
+    public int code() {
+        return rawResponse.code();
+    }
+
+    public ResponseBody errorBody() {
+        return errorBody;
     }
 }
