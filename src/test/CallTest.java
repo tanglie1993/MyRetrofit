@@ -1,9 +1,6 @@
 package test;
 
-import main.retrofit.Call;
-import main.retrofit.Response;
-import main.retrofit.Retrofit;
-import main.retrofit.ToStringConverterFactory;
+import main.retrofit.*;
 import main.retrofit.okhttp.*;
 import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.MockResponse;
@@ -11,6 +8,12 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 public final class CallTest {
@@ -48,5 +51,37 @@ public final class CallTest {
         Response<String> response = example.getString().execute();
         org.assertj.core.api.Assertions.assertThat(response.isSuccessful()).isTrue();
         org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("Hi");
+    }
+
+    @Test
+    public void http200Async() throws InterruptedException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setBody("Hi"));
+
+        final AtomicReference<Response<String>> responseRef = new AtomicReference<>();
+        final CountDownLatch latch = new CountDownLatch(1);
+        Call<String> call = example.getString();
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                responseRef.set(response);
+                latch.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+        assertTrue(latch.await(10, SECONDS));
+
+        Response<String> response = responseRef.get();
+        assertThat(response.isSuccessful()).isTrue();
+        assertThat(response.body()).isEqualTo("Hi");
     }
 }

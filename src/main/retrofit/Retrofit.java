@@ -42,6 +42,7 @@ public class Retrofit {
                                         .url(baseUrl + path)
                                         .build();
                                 return new Call<String>() {
+                                    Call<String> thisCall = this;
                                     @Override
                                     public Response<String> execute() throws IOException {
                                         okhttp3.Response rawResponse = client.newCall(request).execute();
@@ -50,7 +51,18 @@ public class Retrofit {
 
                                     @Override
                                     public void enqueue(Callback<String> callback) {
+                                        okhttp3.Call okhttpCall = client.newCall(request);
+                                        okhttpCall.enqueue(new okhttp3.Callback() {
+                                            @Override
+                                            public void onFailure(okhttp3.Call call, IOException e) {
+                                                callback.onFailure(thisCall, e);
+                                            }
 
+                                            @Override
+                                            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                                                callback.onResponse(thisCall, new Response<String>(response, response.body().string(), response.body()));
+                                            }
+                                        });
                                     }
                                 };
                             }
