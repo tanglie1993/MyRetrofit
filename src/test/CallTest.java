@@ -101,4 +101,34 @@ public final class CallTest {
         assertThat(response.code()).isEqualTo(404);
         assertThat(response.errorBody().string()).isEqualTo("Hi");
     }
+
+    @Test
+    public void http404Async() throws InterruptedException, IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("Hi"));
+
+        final AtomicReference<Response<String>> responseRef = new AtomicReference<>();
+        final CountDownLatch latch = new CountDownLatch(1);
+        example.getString().enqueue(new Callback<String>() {
+            @Override public void onResponse(Call<String> call, Response<String> response) {
+                responseRef.set(response);
+                latch.countDown();
+            }
+
+            @Override public void onFailure(Call<String> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+        assertTrue(latch.await(10, SECONDS));
+
+        Response<String> response = responseRef.get();
+        assertThat(response.isSuccessful()).isFalse();
+        assertThat(response.code()).isEqualTo(404);
+        assertThat(response.errorBody().string()).isEqualTo("Hi");
+    }
 }

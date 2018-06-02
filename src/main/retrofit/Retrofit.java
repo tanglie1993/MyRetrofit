@@ -65,22 +65,11 @@ public class Retrofit {
 
                                             @Override
                                             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                                                callback.onResponse(thisCall, new Response<String>(response, response.body().string(), new ResponseBody() {
-                                                    @Override
-                                                    public MediaType contentType() {
-                                                        return null;
-                                                    }
-
-                                                    @Override
-                                                    public long contentLength() {
-                                                        return 0;
-                                                    }
-
-                                                    @Override
-                                                    public BufferedSource source() {
-                                                        return null;
-                                                    }
-                                                }));
+                                                if(response.isSuccessful()){
+                                                    callback.onResponse(thisCall, new Response<String>(response, response.body().string(),null));
+                                                }else{
+                                                    callback.onResponse(thisCall, new Response<String>(response, null, response.body()));
+                                                }
                                             }
                                         });
                                     }
