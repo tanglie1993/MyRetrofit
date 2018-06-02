@@ -19,12 +19,14 @@
       <file leaf-file-name="CallTest.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/CallTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="444">
-              <caret line="211" column="7" lean-forward="false" selection-start-line="185" selection-start-column="11" selection-end-line="211" selection-end-column="7" />
+            <state relative-caret-position="256">
+              <caret line="186" column="45" lean-forward="false" selection-start-line="186" selection-start-column="16" selection-end-line="186" selection-end-column="45" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2670#2671#0" expanded="true" />
                 <element signature="e#2721#2722#0" expanded="true" />
+                <element signature="e#6696#7435#0" expanded="true" />
+                <element signature="e#7434#7435#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -33,8 +35,8 @@
       <file leaf-file-name="Retrofit.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="67" column="76" lean-forward="true" selection-start-line="67" selection-start-column="76" selection-end-line="67" selection-end-column="76" />
+            <state relative-caret-position="256">
+              <caret line="102" column="37" lean-forward="true" selection-start-line="102" selection-start-column="37" selection-end-line="102" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -42,42 +44,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ResponseBody.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/ResponseBody.class">
+      <file leaf-file-name="OkHttpClient.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/OkHttpClient.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="149">
-              <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+            <state relative-caret-position="193">
+              <caret line="251" column="14" lean-forward="false" selection-start-line="251" selection-start-column="14" selection-end-line="251" selection-end-column="14" />
+              <folding>
+                <element signature="e#8133#8134#0" expanded="true" />
+                <element signature="e#8183#8184#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Call.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/Call.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="50">
+              <caret line="5" column="15" lean-forward="false" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="15" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Response.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/Response.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="110" column="0" lean-forward="false" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
-              <folding>
-                <element signature="e#3136#3137#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Response.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/retrofit/Response.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-              <folding>
-                <element signature="e#453#454#0" expanded="true" />
-                <element signature="e#502#503#0" expanded="true" />
-                <element signature="e#525#526#0" expanded="true" />
-                <element signature="e#552#553#0" expanded="true" />
-                <element signature="e#577#578#0" expanded="true" />
-                <element signature="e#618#619#0" expanded="true" />
-                <element signature="e#689#690#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -85,8 +70,8 @@
       <file leaf-file-name="Call.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/retrofit/Call.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="10" column="17" lean-forward="false" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+            <state relative-caret-position="425">
+              <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -94,11 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Callback.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/retrofit/Callback.java">
+      <file leaf-file-name="Request.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/Request.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="21" column="18" lean-forward="false" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
+            <state relative-caret-position="43">
+              <caret line="191" column="31" lean-forward="false" selection-start-line="191" selection-start-column="31" selection-end-line="191" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -118,6 +103,7 @@
       <find>proxyClassCache</find>
       <find>Request</find>
       <find>enqueue</find>
+      <find>postString</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -135,14 +121,14 @@
         <option value="$PROJECT_DIR$/src/main/retrofit/okhttp/Body.java" />
         <option value="$PROJECT_DIR$/src/main/retrofit/okhttp/Path.java" />
         <option value="$PROJECT_DIR$/src/main/retrofit/okhttp/Streaming.java" />
-        <option value="$PROJECT_DIR$/src/main/retrofit/ToStringConverterFactory.java" />
-        <option value="$PROJECT_DIR$/src/main/retrofit/Converter.java" />
         <option value="$PROJECT_DIR$/src/main/retrofit/okhttp/Call.java" />
-        <option value="$PROJECT_DIR$/src/main/retrofit/Call.java" />
         <option value="$PROJECT_DIR$/src/main/retrofit/Callback.java" />
         <option value="$PROJECT_DIR$/src/main/retrofit/Response.java" />
-        <option value="$PROJECT_DIR$/src/main/retrofit/Retrofit.java" />
+        <option value="$PROJECT_DIR$/src/main/retrofit/ToStringConverterFactory.java" />
         <option value="$PROJECT_DIR$/src/test/CallTest.java" />
+        <option value="$PROJECT_DIR$/src/main/retrofit/Converter.java" />
+        <option value="$PROJECT_DIR$/src/main/retrofit/Retrofit.java" />
+        <option value="$PROJECT_DIR$/src/main/retrofit/Call.java" />
       </list>
     </option>
   </component>
@@ -316,6 +302,8 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="extract.method.default.visibility" value="private" />
+    <property name="SearchEverywhereHistoryKey" value="retrofit&#9;FILE&#9;file://D:/workspace/MyRetrofit/src/main/retrofit/Retrofit.java" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -834,6 +822,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="b4d336eb-5a74-4866-9c6f-4d5938899b17" name="Default" comment="" />
@@ -843,44 +834,44 @@
       <updated>1527600233317</updated>
       <workItem from="1527600236950" duration="5095000" />
       <workItem from="1527685155498" duration="5540000" />
-      <workItem from="1527903980195" duration="5740000" />
+      <workItem from="1527903980195" duration="10853000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="CallTest_http404Async - 2018.06.02 at 11h 16m 47s.xml">
-      <configuration name="CallTest.http404Async" configurationId="JUnit" />
+    <history-entry file="CallTest_conversionProblemOutgoingSync - 2018.06.02 at 11h 23m 29s.xml">
+      <configuration name="CallTest.conversionProblemOutgoingSync" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="CallTest_http404Async - 2018.06.02 at 11h 19m 01s.xml">
-      <configuration name="CallTest.http404Async" configurationId="JUnit" />
+    <history-entry file="CallTest_conversionProblemOutgoingSync - 2018.06.02 at 11h 28m 13s.xml">
+      <configuration name="CallTest.conversionProblemOutgoingSync" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="CallTest_http404Async - 2018.06.02 at 11h 19m 46s.xml">
-      <configuration name="CallTest.http404Async" configurationId="JUnit" />
+    <history-entry file="CallTest_conversionProblemOutgoingSync - 2018.06.02 at 11h 31m 02s.xml">
+      <configuration name="CallTest.conversionProblemOutgoingSync" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="CallTest_http404Sync - 2018.06.02 at 10h 58m 31s.xml">
-      <configuration name="CallTest.http404Sync" configurationId="JUnit" />
+    <history-entry file="CallTest_conversionProblemOutgoingSync - 2018.06.02 at 11h 31m 03s.xml">
+      <configuration name="CallTest.conversionProblemOutgoingSync" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="CallTest_http404Sync - 2018.06.02 at 11h 03m 13s.xml">
-      <configuration name="CallTest.http404Sync" configurationId="JUnit" />
+    <history-entry file="CallTest_conversionProblemOutgoingSync - 2018.06.02 at 11h 33m 58s.xml">
+      <configuration name="CallTest.conversionProblemOutgoingSync" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="CallTest_http404Sync - 2018.06.02 at 11h 07m 39s.xml">
-      <configuration name="CallTest.http404Sync" configurationId="JUnit" />
+    <history-entry file="CallTest_conversionProblemOutgoingSync - 2018.06.02 at 11h 36m 49s.xml">
+      <configuration name="CallTest.conversionProblemOutgoingSync" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="CallTest_http404Sync - 2018.06.02 at 11h 11m 30s.xml">
-      <configuration name="CallTest.http404Sync" configurationId="JUnit" />
+    <history-entry file="CallTest_conversionProblemOutgoingSync - 2018.06.02 at 13h 56m 00s.xml">
+      <configuration name="CallTest.conversionProblemOutgoingSync" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="CallTest_http404Sync - 2018.06.02 at 11h 16m 04s.xml">
-      <configuration name="CallTest.http404Sync" configurationId="JUnit" />
+    <history-entry file="CallTest_conversionProblemOutgoingSync - 2018.06.02 at 13h 59m 20s.xml">
+      <configuration name="CallTest.conversionProblemOutgoingSync" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="CallTest_conversionProblemOutgoingSync - 2018.06.02 at 22h 20m 22s.xml">
+      <configuration name="CallTest.conversionProblemOutgoingSync" configurationId="JUnit" />
     </history-entry>
     <history-entry file="CallTest_transportProblemAsync - 2018.06.02 at 11h 21m 14s.xml">
       <configuration name="CallTest.transportProblemAsync" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="CallTest_transportProblemSync - 2018.06.02 at 11h 20m 33s.xml">
-      <configuration name="CallTest.transportProblemSync" configurationId="JUnit" />
-    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16375000" />
+    <option name="totallyTimeSpent" value="21488000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
@@ -889,13 +880,13 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37650934" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -903,6 +894,7 @@
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22552083" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -914,7 +906,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -928,7 +919,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java</url>
-          <line>78</line>
+          <line>71</line>
           <properties />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
@@ -958,12 +949,24 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java</url>
-          <line>62</line>
+          <line>87</line>
           <properties />
-          <option name="timeStamp" value="16" />
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java</url>
+          <line>104</line>
+          <properties />
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java</url>
+          <line>48</line>
+          <properties />
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="18" />
+      <option name="time" value="23" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -972,14 +975,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/Request.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="61" column="26" lean-forward="false" selection-start-line="61" selection-start-column="19" selection-end-line="61" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/retrofit/Call.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
@@ -1026,6 +1021,8 @@
             <element signature="imports" expanded="true" />
             <element signature="e#2670#2671#0" expanded="true" />
             <element signature="e#2721#2722#0" expanded="true" />
+            <element signature="e#6696#7435#0" expanded="true" />
+            <element signature="e#7434#7435#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1034,9 +1031,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
           <caret line="12" column="63" lean-forward="false" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="63" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1059,9 +1054,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="18" column="73" lean-forward="false" selection-start-line="18" selection-start-column="73" selection-end-line="18" selection-end-column="73" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1179,6 +1172,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="368">
           <caret line="676" column="23" lean-forward="false" selection-start-line="676" selection-start-column="23" selection-end-line="676" selection-end-column="23" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1200,6 +1194,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-681">
           <caret line="40" column="17" lean-forward="false" selection-start-line="40" selection-start-column="17" selection-end-line="40" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1247,34 +1242,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/retrofit/Converter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="12" column="6" lean-forward="false" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/Request.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="61" column="26" lean-forward="false" selection-start-line="61" selection-start-column="19" selection-end-line="61" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/retrofit/ToStringConverterFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="12" column="63" lean-forward="false" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="63" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/Dispatcher.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="196">
@@ -1282,14 +1249,6 @@
           <folding>
             <element signature="e#4509#4510#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/Call.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1309,41 +1268,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/OkHttpClient.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="886">
-          <caret line="300" column="35" lean-forward="false" selection-start-line="300" selection-start-column="28" selection-end-line="300" selection-end-column="35" />
-          <folding>
-            <element signature="e#7689#7690#0" expanded="true" />
-            <element signature="e#7727#7728#0" expanded="true" />
-            <element signature="e#8133#8134#0" expanded="true" />
-            <element signature="e#8183#8184#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/retrofit/Callback.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
           <caret line="21" column="18" lean-forward="false" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/retrofit/Call.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="10" column="17" lean-forward="false" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/junit-4.12.jar!/org/junit/internal/runners/model/ReflectiveCallable.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1406,10 +1334,83 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/junit-4.12.jar!/org/junit/internal/runners/model/ReflectiveCallable.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_121/src.zip!/java/util/concurrent/atomic/AtomicReference.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1554">
+          <caret line="75" column="11" lean-forward="false" selection-start-line="75" selection-start-column="11" selection-end-line="75" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/retrofit/ToStringConverterFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-331">
+          <caret line="14" column="58" lean-forward="true" selection-start-line="14" selection-start-column="58" selection-end-line="14" selection-end-column="58" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/retrofit/Converter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="14" column="6" lean-forward="false" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/OkHttpClient.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="251" column="14" lean-forward="false" selection-start-line="251" selection-start-column="14" selection-end-line="251" selection-end-column="14" />
+          <folding>
+            <element signature="e#8133#8134#0" expanded="true" />
+            <element signature="e#8183#8184#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/Call.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="5" column="15" lean-forward="false" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/Request.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="43">
+          <caret line="191" column="31" lean-forward="false" selection-start-line="191" selection-start-column="31" selection-end-line="191" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="67" column="76" lean-forward="true" selection-start-line="67" selection-start-column="76" selection-end-line="67" selection-end-column="76" />
+        <state relative-caret-position="256">
+          <caret line="102" column="37" lean-forward="true" selection-start-line="102" selection-start-column="37" selection-end-line="102" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/retrofit/Call.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1418,12 +1419,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/CallTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="211" column="7" lean-forward="false" selection-start-line="185" selection-start-column="11" selection-end-line="211" selection-end-column="7" />
+        <state relative-caret-position="256">
+          <caret line="186" column="45" lean-forward="false" selection-start-line="186" selection-start-column="16" selection-end-line="186" selection-end-column="45" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2670#2671#0" expanded="true" />
             <element signature="e#2721#2722#0" expanded="true" />
+            <element signature="e#6696#7435#0" expanded="true" />
+            <element signature="e#7434#7435#0" expanded="true" />
           </folding>
         </state>
       </provider>

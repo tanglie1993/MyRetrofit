@@ -183,31 +183,31 @@ public final class CallTest {
         assertThat(failure).isInstanceOf(IOException.class);
     }
 
-//    @Test
-//    public void conversionProblemOutgoingSync() throws IOException {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(server.url("/"))
-//                .addConverterFactory(new ToStringConverterFactory() {
-//                    @Override
-//                    public Converter<?, RequestBody> requestBodyConverter(Type type,
-//                                                                          Annotation[] parameterAnnotations, Annotation[] methodAnnotations,
-//                                                                          Retrofit retrofit) {
-//                        return new Converter<String, RequestBody>() {
-//                            @Override public RequestBody convert(String value) throws IOException {
-//                                throw new UnsupportedOperationException("I am broken!");
-//                            }
-//                        };
-//                    }
-//                })
-//                .build();
-//        Service example = retrofit.create(Service.class);
-//
-//        Call<String> call = example.postString("Hi");
-//        try {
-//            call.execute();
-//            fail();
-//        } catch (UnsupportedOperationException e) {
-//            assertThat(e).hasMessage("I am broken!");
-//        }
-//    }
+    @Test
+    public void conversionProblemOutgoingSync() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory() {
+                    @Override
+                    public Converter<?, RequestBody> requestBodyConverter(Type type,
+                                                                          Annotation[] parameterAnnotations, Annotation[] methodAnnotations,
+                                                                          Retrofit retrofit) {
+                        return new Converter<String, RequestBody>() {
+                            @Override public RequestBody convert(String value) throws IOException {
+                                throw new UnsupportedOperationException("I am broken!");
+                            }
+                        };
+                    }
+                })
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        Call<String> call = example.postString("Hi");
+        try {
+            call.execute();
+            fail();
+        } catch (UnsupportedOperationException e) {
+            assertThat(e).hasMessage("I am broken!");
+        }
+    }
 }
