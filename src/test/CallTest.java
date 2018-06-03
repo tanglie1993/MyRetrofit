@@ -400,4 +400,31 @@ public final class CallTest {
         assertThat(response.body()).isNull();
         verifyNoMoreInteractions(converter);
     }
+
+    @Test
+    public void http205SkipsConverter() throws IOException {
+        final Converter<ResponseBody, String> converter = spy(new Converter<ResponseBody, String>() {
+            @Override public String convert(ResponseBody value) throws IOException {
+                return value.string();
+            }
+        });
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory() {
+                    @Override
+                    public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                            Annotation[] annotations, Retrofit retrofit) {
+                        return converter;
+                    }
+                })
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setStatus("HTTP/1.1 205 Nothin"));
+
+        Response<String> response = example.getString().execute();
+        assertThat(response.code()).isEqualTo(205);
+        assertThat(response.body()).isNull();
+        verifyNoMoreInteractions(converter);
+    }
 }
