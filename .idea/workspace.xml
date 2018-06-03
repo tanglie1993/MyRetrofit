@@ -19,8 +19,8 @@
       <file leaf-file-name="CallTest.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/CallTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="86">
-              <caret line="404" column="37" lean-forward="false" selection-start-line="404" selection-start-column="16" selection-end-line="404" selection-end-column="37" />
+            <state relative-caret-position="361">
+              <caret line="431" column="31" lean-forward="false" selection-start-line="431" selection-start-column="16" selection-end-line="431" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#9984#10614#0" expanded="true" />
@@ -30,6 +30,16 @@
                 <element signature="e#16905#17259#0" expanded="true" />
                 <element signature="e#17258#17259#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RealCall.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/RealCall.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -60,8 +70,8 @@
       <file leaf-file-name="Retrofit.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="449">
-              <caret line="102" column="33" lean-forward="true" selection-start-line="102" selection-start-column="33" selection-end-line="102" selection-end-column="33" />
+            <state relative-caret-position="124">
+              <caret line="89" column="86" lean-forward="false" selection-start-line="89" selection-start-column="86" selection-end-line="89" selection-end-column="86" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -145,8 +155,8 @@
         <option value="$PROJECT_DIR$/src/main/retrofit/Call.java" />
         <option value="$PROJECT_DIR$/src/main/retrofit/ToStringConverterFactory.java" />
         <option value="$PROJECT_DIR$/src/main/retrofit/Converter.java" />
-        <option value="$PROJECT_DIR$/src/main/retrofit/Retrofit.java" />
         <option value="$PROJECT_DIR$/src/test/CallTest.java" />
+        <option value="$PROJECT_DIR$/src/main/retrofit/Retrofit.java" />
       </list>
     </option>
   </component>
@@ -332,7 +342,7 @@
       <recent name="main.retrofit" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.CallTest">
+  <component name="RunManager" selected="JUnit.CallTest.executeCallOnce">
     <configuration default="false" name="CallTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -347,32 +357,6 @@
       <option name="MAIN_CLASS_NAME" value="test.CallTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
-    <configuration default="false" name="CallTest.conversionProblemIncomingMaskedByConverterIsUnwrapped" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="MyRetrofit" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="test" />
-      <option name="MAIN_CLASS_NAME" value="test.CallTest" />
-      <option name="METHOD_NAME" value="conversionProblemIncomingMaskedByConverterIsUnwrapped" />
-      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" />
@@ -450,6 +434,32 @@
       <option name="PACKAGE_NAME" value="test" />
       <option name="MAIN_CLASS_NAME" value="test.CallTest" />
       <option name="METHOD_NAME" value="http205SkipsConverter" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="false" name="CallTest.executeCallOnce" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="MyRetrofit" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="test" />
+      <option name="MAIN_CLASS_NAME" value="test.CallTest" />
+      <option name="METHOD_NAME" value="executeCallOnce" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
@@ -822,18 +832,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="JUnit.CallTest" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.CallTest.conversionProblemIncomingMaskedByConverterIsUnwrapped" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.CallTest.conversionProblemIncomingAsync" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.CallTest.http204SkipsConverter" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.CallTest.http205SkipsConverter" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.CallTest.conversionProblemIncomingAsync" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.CallTest.http204SkipsConverter" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.CallTest.http205SkipsConverter" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.CallTest.executeCallOnce" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.CallTest" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.CallTest.http205SkipsConverter" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.CallTest.http204SkipsConverter" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.CallTest.conversionProblemIncomingAsync" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.CallTest.conversionProblemIncomingMaskedByConverterIsUnwrapped" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.CallTest.executeCallOnce" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.CallTest" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.CallTest.http205SkipsConverter" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.CallTest.http204SkipsConverter" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.CallTest.conversionProblemIncomingAsync" />
       </list>
     </recent_temporary>
   </component>
@@ -853,25 +863,25 @@
       <workItem from="1527600236950" duration="5095000" />
       <workItem from="1527685155498" duration="5540000" />
       <workItem from="1527903980195" duration="12476000" />
-      <workItem from="1528005981940" duration="3568000" />
+      <workItem from="1528005981940" duration="4169000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="CallTest - 2018.06.03 at 14h 31m 38s.xml">
-      <configuration name="CallTest" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="CallTest - 2018.06.03 at 15h 05m 50s.xml">
       <configuration name="CallTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="CallTest_conversionProblemIncomingAsync - 2018.06.03 at 14h 32m 28s.xml">
-      <configuration name="CallTest.conversionProblemIncomingAsync" configurationId="JUnit" />
     </history-entry>
     <history-entry file="CallTest_conversionProblemIncomingAsync - 2018.06.03 at 14h 38m 57s.xml">
       <configuration name="CallTest.conversionProblemIncomingAsync" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="CallTest_conversionProblemIncomingMaskedByConverterIsUnwrapped - 2018.06.03 at 14h 31m 48s.xml">
-      <configuration name="CallTest.conversionProblemIncomingMaskedByConverterIsUnwrapped" configurationId="JUnit" />
+    <history-entry file="CallTest_executeCallOnce - 2018.06.03 at 15h 06m 28s.xml">
+      <configuration name="CallTest.executeCallOnce" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="CallTest_executeCallOnce - 2018.06.03 at 15h 15m 34s.xml">
+      <configuration name="CallTest.executeCallOnce" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="CallTest_executeCallOnce - 2018.06.03 at 15h 15m 46s.xml">
+      <configuration name="CallTest.executeCallOnce" configurationId="JUnit" />
     </history-entry>
     <history-entry file="CallTest_http204SkipsConverter - 2018.06.03 at 14h 48m 12s.xml">
       <configuration name="CallTest.http204SkipsConverter" configurationId="JUnit" />
@@ -890,7 +900,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="26679000" />
+    <option name="totallyTimeSpent" value="27280000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
@@ -905,7 +915,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31064764" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31064764" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -938,7 +948,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java</url>
-          <line>74</line>
+          <line>75</line>
           <properties />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
@@ -968,7 +978,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java</url>
-          <line>114</line>
+          <line>119</line>
           <properties />
           <option name="timeStamp" value="21" />
         </line-breakpoint>
@@ -986,7 +996,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java</url>
-          <line>97</line>
+          <line>102</line>
           <properties />
           <option name="timeStamp" value="27" />
         </line-breakpoint>
@@ -1278,13 +1288,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/RealCall.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="79" column="9" lean-forward="false" selection-start-line="79" selection-start-column="9" selection-end-line="79" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/retrofit/Callback.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
@@ -1408,16 +1411,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="102" column="33" lean-forward="true" selection-start-line="102" selection-start-column="33" selection-end-line="102" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/retrofit/Response.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
@@ -1429,10 +1422,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/okhttp-3.3.1.jar!/okhttp3/RealCall.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/retrofit/Retrofit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="89" column="86" lean-forward="false" selection-start-line="89" selection-start-column="86" selection-end-line="89" selection-end-column="86" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/CallTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="86">
-          <caret line="404" column="37" lean-forward="false" selection-start-line="404" selection-start-column="16" selection-end-line="404" selection-end-column="37" />
+        <state relative-caret-position="361">
+          <caret line="431" column="31" lean-forward="false" selection-start-line="431" selection-start-column="16" selection-end-line="431" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#9984#10614#0" expanded="true" />

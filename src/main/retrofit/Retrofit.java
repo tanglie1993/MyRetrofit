@@ -25,6 +25,7 @@ public class Retrofit {
 
     private HttpUrl baseUrl;
     private Converter.Factory factory;
+    private volatile boolean isExecuted = false;
 
     public Retrofit(HttpUrl baseUrl, Converter.Factory factory, OkHttpClient client) {
         this.baseUrl = baseUrl;
@@ -85,6 +86,10 @@ public class Retrofit {
 
                             @Override
                             public Response<String> execute() throws IOException {
+                                if(isExecuted){
+                                    throw new IllegalStateException("Already executed.");
+                                }
+                                isExecuted = true;
                                 if(method!= null && method.equals("POST")){
                                     request.newBuilder().method("POST", requestBodyConverter.convert(body));
                                 }
