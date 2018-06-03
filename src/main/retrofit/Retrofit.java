@@ -26,9 +26,10 @@ public class Retrofit {
     private HttpUrl baseUrl;
     private Converter.Factory factory;
 
-    public Retrofit(HttpUrl baseUrl, Converter.Factory factory) {
+    public Retrofit(HttpUrl baseUrl, Converter.Factory factory, OkHttpClient client) {
         this.baseUrl = baseUrl;
         this.factory = factory;
+        this.client = client;
     }
 
     public <T> T create(final Class<T> service) {
@@ -137,6 +138,7 @@ public class Retrofit {
 
         private HttpUrl baseUrl;
         private Converter.Factory factory;
+        private OkHttpClient client = new OkHttpClient();
 
 
         public Builder baseUrl(HttpUrl url) {
@@ -150,7 +152,12 @@ public class Retrofit {
         }
 
         public Retrofit build() {
-            return new Retrofit(baseUrl, factory);
+            return new Retrofit(baseUrl, factory, client);
+        }
+
+        public Builder client(OkHttpClient client) {
+            this.client = client;
+            return this;
         }
     }
 }

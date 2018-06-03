@@ -2,11 +2,17 @@ package test;
 
 import main.retrofit.*;
 import main.retrofit.okhttp.*;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;
+import okio.Buffer;
+import okio.BufferedSource;
+import okio.ForwardingSource;
+import okio.Okio;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -274,6 +280,57 @@ public final class CallTest {
             fail();
         } catch (UnsupportedOperationException e) {
             assertThat(e).hasMessage("I am broken!");
+        }
+    }
+
+    @Test
+    public void conversionProblemIncomingMaskedByConverterIsUnwrapped() throws IOException {
+        // MWS has no way to trigger IOExceptions during the response body so use an interceptor.
+        OkHttpClient client = new OkHttpClient.Builder() //
+                .addInterceptor(new Interceptor() {
+                    @Override public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response response = chain.proceed(chain.request());
+                        ResponseBody body = response.body();
+                        BufferedSource source = Okio.buffer(new ForwardingSource(body.source()) {
+                            @Override public long read(Buffer sink, long byteCount) throws IOException {
+                                throw new IOException("cause");
+                            }
+                        });
+                        body = ResponseBody.create(body.contentType(), body.contentLength(), source);
+                        return response.newBuilder().body(body).build();
+                    }
+                }).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .client(client)
+                .addConverterFactory(new ToStringConverterFactory() {
+                    @Override
+                    public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                            Annotation[] annotations, Retrofit retrofit) {
+                        return new Converter<ResponseBody, String>() {
+                            @Override public String convert(ResponseBody value) throws IOException {
+                                try {
+                                    return value.string();
+                                } catch (IOException e) {
+                                    // Some serialization libraries mask transport problems in runtime exceptions. Bad!
+                                    throw new RuntimeException("wrapper", e);
+                                }
+                            }
+                        };
+                    }
+                })
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setBody("Hi"));
+
+        Call<String> call = example.getString();
+        try {
+            call.execute();
+            fail();
+        } catch (IOException e) {
+            assertThat(e).hasMessage("cause");
         }
     }
 }
