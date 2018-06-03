@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.squareup.okhttp3:benchmarks:3.3.1" level="project" />
     <orderEntry type="library" name="org.assertj:assertj-core:2.0.0" level="project" />
+    <orderEntry type="library" name="org.mockito:mockito-core:1.9.5" level="project" />
   </component>
 </module>

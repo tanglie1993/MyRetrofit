@@ -92,6 +92,9 @@ public class Retrofit {
                                 okhttp3.Response rawResponse = rawCall.execute();
                                 if(rawResponse.isSuccessful()){
                                     if(responseBodyConverter == null){
+                                        if(rawResponse.body().contentLength() == 0){
+                                            return new Response<>(rawResponse, null, null);
+                                        }
                                         return new Response<>(rawResponse, rawResponse.body().string(), null);
                                     }
                                     return new Response<>(rawResponse, responseBodyConverter.convert(rawResponse.body()), null);
