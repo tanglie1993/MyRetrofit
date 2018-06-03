@@ -247,4 +247,33 @@ public final class CallTest {
         assertThat(failureRef.get()).isInstanceOf(UnsupportedOperationException.class)
                 .hasMessage("I am broken!");
     }
+
+    @Test
+    public void conversionProblemIncomingSync() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory() {
+                    @Override
+                    public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                            Annotation[] annotations, Retrofit retrofit) {
+                        return new Converter<ResponseBody, String>() {
+                            @Override public String convert(ResponseBody value) throws IOException {
+                                throw new UnsupportedOperationException("I am broken!");
+                            }
+                        };
+                    }
+                })
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setBody("Hi"));
+
+        Call<String> call = example.postString("Hi");
+        try {
+            call.execute();
+            fail();
+        } catch (UnsupportedOperationException e) {
+            assertThat(e).hasMessage("I am broken!");
+        }
+    }
 }

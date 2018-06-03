@@ -14,7 +14,8 @@ import java.lang.reflect.Type;
  */
 public class ToStringConverterFactory extends Converter.Factory {
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter() {
+    public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                            Annotation[] annotations, Retrofit retrofit) {
         return (Converter<ResponseBody, String>) value -> {
             if(value == null){
                 return "";

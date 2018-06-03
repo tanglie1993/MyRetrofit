@@ -43,7 +43,7 @@ public class Retrofit {
                                 Request request = new Request.Builder()
                                         .url(baseUrl + path)
                                         .build();
-                                return createCall(request, "GET", null, null);
+                                return createCall(request, "GET", null, null, null);
                             }else if(method.getDeclaredAnnotations()[0] instanceof POST){
                                 POST post = (POST) method.getDeclaredAnnotations()[0];
                                 String path = post.value();
@@ -60,20 +60,23 @@ public class Retrofit {
                                     }
                                     paramIndex++;
                                 }
-                                Converter<String, RequestBody> converter = (Converter<String, RequestBody>) factory.requestBodyConverter(String.class,
+                                Converter<String, RequestBody> requestBodyConverter = (Converter<String, RequestBody>) factory.requestBodyConverter(String.class,
                                         method.getParameterAnnotations()[paramIndex],
+                                        method.getDeclaredAnnotations(), Retrofit.this);
+                                Converter<ResponseBody, String> responseBodyConverter = (Converter<ResponseBody, String>) factory.responseBodyConverter(String.class,
                                         method.getDeclaredAnnotations(), Retrofit.this);
                                 Request request = new Request.Builder()
                                         .url(baseUrl + path)
                                         .build();
-                                return createCall(request, "POST",  body, converter);
+                                return createCall(request, "POST",  body, requestBodyConverter, responseBodyConverter);
                             }
                         }
                         return new Object();
                     }
 
                     private Object createCall(final Request request, final String method,
-                                              final String body, final Converter<String, RequestBody> requestBodyConverter) {
+                                              final String body, final Converter<String, RequestBody> requestBodyConverter,
+                                              final Converter<ResponseBody, String> responseBodyConverter) {
                         return new Call<String>() {
 
                             Call<String> thisCall = this;
@@ -87,7 +90,10 @@ public class Retrofit {
                                 okhttp3.Call rawCall = client.newCall(request);
                                 okhttp3.Response rawResponse = rawCall.execute();
                                 if(rawResponse.isSuccessful()){
-                                    return new Response<>(rawResponse, rawResponse.body().string(), null);
+                                    if(responseBodyConverter == null){
+                                        return new Response<>(rawResponse, rawResponse.body().string(), null);
+                                    }
+                                    return new Response<>(rawResponse, responseBodyConverter.convert(rawResponse.body()), null);
                                 }else{
                                     return new Response<>(rawResponse, null, rawResponse.body());
                                 }
@@ -112,9 +118,12 @@ public class Retrofit {
                                     @Override
                                     public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                                         if(response.isSuccessful()){
-                                            callback.onResponse(thisCall, new Response<String>(response, response.body().string(),null));
+                                            if(responseBodyConverter == null){
+                                                callback.onResponse(thisCall, new Response<>(response, response.body().string(),null));
+                                            }
+                                            callback.onResponse(thisCall, new Response<>(response, responseBodyConverter.convert(response.body()),null));
                                         }else{
-                                            callback.onResponse(thisCall, new Response<String>(response, null, response.body()));
+                                            callback.onResponse(thisCall, new Response<>(response, null, response.body()));
                                         }
                                     }
                                 });

@@ -16,7 +16,8 @@ public interface Converter<F, T> {
 
     abstract class Factory {
 
-        public abstract Converter<ResponseBody, ?> responseBodyConverter();
+        public abstract Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                         Annotation[] annotations, Retrofit retrofit);
 
         public abstract Converter<?, RequestBody> requestBodyConverter(Type type,
                                                                        Annotation[] parameterAnnotations, Annotation[] methodAnnotations,
