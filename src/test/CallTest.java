@@ -445,4 +445,33 @@ public final class CallTest {
             assertThat(e).hasMessage("Already executed.");
         }
     }
+
+    @Test
+    public void successfulRequestResponseWhenMimeTypeMissing() throws Exception {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setBody("Hi").removeHeader("Content-Type"));
+
+        Response<String> response = example.getString().execute();
+        assertThat(response.body()).isEqualTo("Hi");
+    }
+
+    @Test
+    public void responseBody() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setBody("1234"));
+
+        Response<ResponseBody> response = example.getBody().execute();
+        String str = response.body().string();
+        assertThat(str).isEqualTo("1234");
+    }
 }
