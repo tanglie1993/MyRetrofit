@@ -118,13 +118,17 @@ public class Retrofit {
 
                                     @Override
                                     public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                                        if(response.isSuccessful()){
-                                            if(responseBodyConverter == null){
-                                                callback.onResponse(thisCall, new Response<>(response, response.body().string(),null));
+                                        try{
+                                            if(response.isSuccessful()){
+                                                if(responseBodyConverter == null){
+                                                    callback.onResponse(thisCall, new Response<>(response, response.body().string(),null));
+                                                }
+                                                callback.onResponse(thisCall, new Response<>(response, responseBodyConverter.convert(response.body()),null));
+                                            }else{
+                                                callback.onResponse(thisCall, new Response<>(response, null, response.body()));
                                             }
-                                            callback.onResponse(thisCall, new Response<>(response, responseBodyConverter.convert(response.body()),null));
-                                        }else{
-                                            callback.onResponse(thisCall, new Response<>(response, null, response.body()));
+                                        } catch (Exception e){
+                                            callback.onFailure(thisCall, e);
                                         }
                                     }
                                 });
