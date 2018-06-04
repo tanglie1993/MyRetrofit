@@ -169,10 +169,6 @@ public class Retrofit {
         private List<Converter.Factory> factoryList = new ArrayList<>();
         private OkHttpClient client = new OkHttpClient();
 
-        public Builder() {
-            factoryList.add(BuiltInConverter.INSTANCE);
-        }
-
         public Builder baseUrl(HttpUrl url) {
             this.baseUrl = url;
             return this;
