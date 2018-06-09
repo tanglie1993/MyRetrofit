@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -285,56 +286,56 @@ public final class CallTest {
         }
     }
 
-    @Test
-    public void conversionProblemIncomingMaskedByConverterIsUnwrapped() throws IOException {
-        // MWS has no way to trigger IOExceptions during the response body so use an interceptor.
-        OkHttpClient client = new OkHttpClient.Builder() //
-                .addInterceptor(new Interceptor() {
-                    @Override public okhttp3.Response intercept(Chain chain) throws IOException {
-                        okhttp3.Response response = chain.proceed(chain.request());
-                        ResponseBody body = response.body();
-                        BufferedSource source = Okio.buffer(new ForwardingSource(body.source()) {
-                            @Override public long read(Buffer sink, long byteCount) throws IOException {
-                                throw new IOException("cause");
-                            }
-                        });
-                        body = ResponseBody.create(body.contentType(), body.contentLength(), source);
-                        return response.newBuilder().body(body).build();
-                    }
-                }).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(server.url("/"))
-                .client(client)
-                .addConverterFactory(new ToStringConverterFactory() {
-                    @Override
-                    public Converter<ResponseBody, ?> responseBodyConverter(Type type,
-                                                                            Annotation[] annotations, Retrofit retrofit) {
-                        return new Converter<ResponseBody, String>() {
-                            @Override public String convert(ResponseBody value) throws IOException {
-                                try {
-                                    return value.string();
-                                } catch (IOException e) {
-                                    // Some serialization libraries mask transport problems in runtime exceptions. Bad!
-                                    throw new RuntimeException("wrapper", e);
-                                }
-                            }
-                        };
-                    }
-                })
-                .build();
-        Service example = retrofit.create(Service.class);
-
-        server.enqueue(new MockResponse().setBody("Hi"));
-
-        Call<String> call = example.getString();
-        try {
-            call.execute();
-            fail();
-        } catch (IOException e) {
-            assertThat(e).hasMessage("cause");
-        }
-    }
+//    @Test
+//    public void conversionProblemIncomingMaskedByConverterIsUnwrapped() throws IOException {
+//        // MWS has no way to trigger IOExceptions during the response body so use an interceptor.
+//        OkHttpClient client = new OkHttpClient.Builder() //
+//                .addInterceptor(new Interceptor() {
+//                    @Override public okhttp3.Response intercept(Chain chain) throws IOException {
+//                        okhttp3.Response response = chain.proceed(chain.request());
+//                        ResponseBody body = response.body();
+//                        BufferedSource source = Okio.buffer(new ForwardingSource(body.source()) {
+//                            @Override public long read(Buffer sink, long byteCount) throws IOException {
+//                                throw new IOException("cause");
+//                            }
+//                        });
+//                        body = ResponseBody.create(body.contentType(), body.contentLength(), source);
+//                        return response.newBuilder().body(body).build();
+//                    }
+//                }).build();
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(server.url("/"))
+//                .client(client)
+//                .addConverterFactory(new ToStringConverterFactory() {
+//                    @Override
+//                    public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+//                                                                            Annotation[] annotations, Retrofit retrofit) {
+//                        return new Converter<ResponseBody, String>() {
+//                            @Override public String convert(ResponseBody value) throws IOException {
+//                                try {
+//                                    return value.string();
+//                                } catch (IOException e) {
+//                                    // Some serialization libraries mask transport problems in runtime exceptions. Bad!
+//                                    throw new RuntimeException("wrapper", e);
+//                                }
+//                            }
+//                        };
+//                    }
+//                })
+//                .build();
+//        Service example = retrofit.create(Service.class);
+//
+//        server.enqueue(new MockResponse().setBody("Hi"));
+//
+//        Call<String> call = example.getString();
+//        try {
+//            call.execute();
+//            fail();
+//        } catch (IOException e) {
+//            assertThat(e).hasMessage("cause");
+//        }
+//    }
 
     @Test
     public void conversionProblemIncomingAsync() throws InterruptedException {
@@ -474,4 +475,26 @@ public final class CallTest {
         String str = response.body().string();
         assertThat(str).isEqualTo("1234");
     }
+
+//    @Test
+//    public void responseBodyBuffers() throws IOException {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(server.url("/"))
+//                .addConverterFactory(new ToStringConverterFactory())
+//                .build();
+//        Service example = retrofit.create(Service.class);
+//
+//        server.enqueue(new MockResponse()
+//                .setBody("1234")
+//                .setSocketPolicy(DISCONNECT_DURING_RESPONSE_BODY));
+//
+//        Call<ResponseBody> buffered = example.getBody();
+//        // When buffering we will detect all socket problems before returning the Response.
+//        try {
+//            buffered.execute();
+//            fail();
+//        } catch (IOException e) {
+//            assertThat(e).hasMessage("unexpected end of stream");
+//        }
+//    }
 }
