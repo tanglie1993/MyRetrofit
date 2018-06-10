@@ -1,6 +1,12 @@
 package main.retrofit;
 
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okio.Buffer;
+import okio.BufferedSource;
+import okio.ForwardingSource;
+import okio.Okio;
 
 import java.io.IOException;
 
@@ -13,7 +19,7 @@ public class OkHttpCall implements Call {
     private ServiceMethod serviceMethod;
 
     public OkHttpCall(ServiceMethod serviceMethod) {
-        this.serviceMethod =  serviceMethod;
+        this.serviceMethod = serviceMethod;
     }
 
     @Override
@@ -28,14 +34,7 @@ public class OkHttpCall implements Call {
         }
         okhttp3.Call rawCall = serviceMethod.client.newCall(serviceMethod.request);
         okhttp3.Response rawResponse = rawCall.execute();
-        if(rawResponse.isSuccessful()){
-            if(rawResponse.body().contentLength() == 0){
-                return new Response<>(rawResponse, null, null);
-            }
-            return new Response<>(rawResponse, serviceMethod.responseBodyConverter.convert(rawResponse.body()), null);
-        }else{
-            return new Response<>(rawResponse, null, rawResponse.body());
-        }
+        return parseResponse(rawResponse);
     }
 
     @Override
@@ -58,15 +57,72 @@ public class OkHttpCall implements Call {
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 try{
-                    if(response.isSuccessful()){
-                        callback.onResponse(OkHttpCall.this, new Response<>(response, serviceMethod.responseBodyConverter.convert(response.body()),null));
-                    }else{
-                        callback.onResponse(OkHttpCall.this, new Response<>(response, null, response.body()));
-                    }
+                    callback.onResponse(OkHttpCall.this, parseResponse(response));
                 } catch (Exception e){
                     callback.onFailure(OkHttpCall.this, e);
                 }
             }
         });
+    }
+
+    private Response parseResponse(okhttp3.Response response) throws IOException {
+        ExceptionCatchingResponseBody exceptionCatchingResponseBody = new ExceptionCatchingResponseBody(response.body());
+        if(response.isSuccessful()){
+            if(response.body().contentLength() == 0){
+                return new Response<>(response, null, null);
+            }
+            try {
+                return new Response<>(response, serviceMethod.responseBodyConverter.convert(exceptionCatchingResponseBody),null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                if(exceptionCatchingResponseBody.thrownException !=  null){
+                    throw exceptionCatchingResponseBody.thrownException;
+                }else{
+                    throw e;
+                }
+            }
+        }else{
+            return new Response<>(response, null, response.body());
+        }
+    }
+
+    static final class ExceptionCatchingResponseBody extends ResponseBody {
+        private final ResponseBody delegate;
+        IOException thrownException;
+
+        ExceptionCatchingResponseBody(ResponseBody delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override public MediaType contentType() {
+            return delegate.contentType();
+        }
+
+        @Override public long contentLength() {
+            return delegate.contentLength();
+        }
+
+        @Override public BufferedSource source() {
+            return Okio.buffer(new ForwardingSource(delegate.source()) {
+                @Override public long read(Buffer sink, long byteCount) throws IOException {
+                    try {
+                        return super.read(sink, byteCount);
+                    } catch (IOException e) {
+                        thrownException = e;
+                        throw e;
+                    }
+                }
+            });
+        }
+
+        @Override public void close() {
+            delegate.close();
+        }
+
+        void throwIfCaught() throws IOException {
+            if (thrownException != null) {
+                throw thrownException;
+            }
+        }
     }
 }
