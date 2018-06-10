@@ -66,6 +66,12 @@ public class OkHttpCall implements Call {
     }
 
     private Response parseResponse(okhttp3.Response response) throws IOException {
+        int code = response.code();
+
+        if (code == 204 || code == 205) {
+            response.close();
+            return new Response<>(response, null, null);
+        }
         ExceptionCatchingResponseBody exceptionCatchingResponseBody = new ExceptionCatchingResponseBody(response.body());
         response = response.newBuilder()
                 .body(new NoContentResponseBody(response.body().contentType(), response.body().contentLength()))
