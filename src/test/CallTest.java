@@ -498,4 +498,28 @@ public final class CallTest {
             assertThat(e).hasMessage("unexpected end of stream");
         }
     }
+
+    @Test
+    public void responseBodyStreams() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse()
+                .setBody("1234")
+                .setSocketPolicy(DISCONNECT_DURING_RESPONSE_BODY));
+
+        Response<ResponseBody> response = example.getStreamingBody().execute();
+
+        ResponseBody streamedBody = response.body();
+        // When streaming we only detect socket problems as the ResponseBody is read.
+        try {
+            streamedBody.string();
+            fail();
+        } catch (IOException e) {
+            assertThat(e).hasMessage("unexpected end of stream");
+        }
+    }
 }

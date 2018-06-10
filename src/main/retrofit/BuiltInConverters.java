@@ -15,6 +15,7 @@
  */
 package main.retrofit;
 
+import main.retrofit.okhttp.Streaming;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.Buffer;
@@ -31,6 +32,11 @@ final class BuiltInConverter extends Converter.Factory {
   @Override
   public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
                                                           Retrofit retrofit) {
+    for(Annotation annotation : annotations){
+      if(annotation instanceof Streaming){
+        return StreamingResponseBodyConverter.INSTANCE;
+      }
+    }
     return ResponseBodyConverter.INSTANCE;
   }
 
@@ -56,6 +62,15 @@ final class BuiltInConverter extends Converter.Factory {
       Buffer buffer = new Buffer();
       value.source().readAll(buffer);
       return ResponseBody.create(value.contentType(), value.contentLength(), buffer);
+    }
+  }
+
+  static final class StreamingResponseBodyConverter implements Converter<ResponseBody, ResponseBody> {
+    static final StreamingResponseBodyConverter INSTANCE = new StreamingResponseBodyConverter();
+
+    @Override
+    public ResponseBody convert(ResponseBody value) throws IOException {
+      return value;
     }
   }
 }
