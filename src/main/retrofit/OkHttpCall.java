@@ -71,9 +71,6 @@ public class OkHttpCall implements Call {
                 .body(new NoContentResponseBody(response.body().contentType(), response.body().contentLength()))
                 .build();
         if(response.isSuccessful()){
-            if(response.body().contentLength() == 0){
-                return new Response<>(response, serviceMethod.responseBodyConverter.convert(new NoContentResponseBody(response.body().contentType(), response.body().contentLength())), null);
-            }
             try {
                 return new Response<>(response, serviceMethod.responseBodyConverter.convert(exceptionCatchingResponseBody),null);
             } catch (Exception e) {
