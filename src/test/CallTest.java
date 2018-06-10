@@ -545,4 +545,21 @@ public final class CallTest {
             assertThat(e).hasMessage("Cannot read raw response body of a converted body.");
         }
     }
+
+    @Test
+    public void emptyResponse() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setBody("").addHeader("Content-Type", "text/stringy"));
+
+        Response<String> response = example.getString().execute();
+        assertThat(response.body()).isEqualTo("");
+        ResponseBody rawBody = response.raw().body();
+        assertThat(rawBody.contentLength()).isEqualTo(0);
+        assertThat(rawBody.contentType().toString()).isEqualTo("text/stringy");
+    }
 }

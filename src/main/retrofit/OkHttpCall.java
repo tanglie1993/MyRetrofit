@@ -67,9 +67,12 @@ public class OkHttpCall implements Call {
 
     private Response parseResponse(okhttp3.Response response) throws IOException {
         ExceptionCatchingResponseBody exceptionCatchingResponseBody = new ExceptionCatchingResponseBody(response.body());
+        response = response.newBuilder()
+                .body(new NoContentResponseBody(response.body().contentType(), response.body().contentLength()))
+                .build();
         if(response.isSuccessful()){
             if(response.body().contentLength() == 0){
-                return new Response<>(response, null, null);
+                return new Response<>(response, serviceMethod.responseBodyConverter.convert(new NoContentResponseBody(response.body().contentType(), response.body().contentLength())), null);
             }
             try {
                 return new Response<>(response, serviceMethod.responseBodyConverter.convert(exceptionCatchingResponseBody),null);
@@ -82,7 +85,9 @@ public class OkHttpCall implements Call {
                 }
             }
         }else{
-            return new Response<>(response, null, response.body());
+            Buffer buffer = new Buffer();
+            exceptionCatchingResponseBody.source().readAll(buffer);
+            return new Response<>(response, null,  ResponseBody.create(response.body().contentType(), response.body().contentLength(), buffer));
         }
     }
 
@@ -123,6 +128,28 @@ public class OkHttpCall implements Call {
             if (thrownException != null) {
                 throw thrownException;
             }
+        }
+    }
+
+    static final class NoContentResponseBody extends ResponseBody {
+        private final MediaType contentType;
+        private final long contentLength;
+
+        NoContentResponseBody(MediaType contentType, long contentLength) {
+            this.contentType = contentType;
+            this.contentLength = contentLength;
+        }
+
+        @Override public MediaType contentType() {
+            return contentType;
+        }
+
+        @Override public long contentLength() {
+            return contentLength;
+        }
+
+        @Override public BufferedSource source() {
+            throw new IllegalStateException("Cannot read raw response body of a converted body.");
         }
     }
 }
