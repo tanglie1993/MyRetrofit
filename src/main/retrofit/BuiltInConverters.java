@@ -17,6 +17,7 @@ package main.retrofit;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okio.Buffer;
 
 
 import java.io.IOException;
@@ -52,7 +53,9 @@ final class BuiltInConverter extends Converter.Factory {
 
     @Override
     public ResponseBody convert(ResponseBody value) throws IOException {
-      return value;
+      Buffer buffer = new Buffer();
+      value.source().readAll(buffer);
+      return ResponseBody.create(value.contentType(), value.contentLength(), buffer);
     }
   }
 }

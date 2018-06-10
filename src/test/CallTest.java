@@ -295,7 +295,8 @@ public final class CallTest {
                         okhttp3.Response response = chain.proceed(chain.request());
                         ResponseBody body = response.body();
                         BufferedSource source = Okio.buffer(new ForwardingSource(body.source()) {
-                            @Override public long read(Buffer sink, long byteCount) throws IOException {
+                            @Override
+                            public long read(Buffer sink, long byteCount) throws IOException {
                                 throw new IOException("cause");
                             }
                         });
@@ -476,25 +477,25 @@ public final class CallTest {
         assertThat(str).isEqualTo("1234");
     }
 
-//    @Test
-//    public void responseBodyBuffers() throws IOException {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(server.url("/"))
-//                .addConverterFactory(new ToStringConverterFactory())
-//                .build();
-//        Service example = retrofit.create(Service.class);
-//
-//        server.enqueue(new MockResponse()
-//                .setBody("1234")
-//                .setSocketPolicy(DISCONNECT_DURING_RESPONSE_BODY));
-//
-//        Call<ResponseBody> buffered = example.getBody();
-//        // When buffering we will detect all socket problems before returning the Response.
-//        try {
-//            buffered.execute();
-//            fail();
-//        } catch (IOException e) {
-//            assertThat(e).hasMessage("unexpected end of stream");
-//        }
-//    }
+    @Test
+    public void responseBodyBuffers() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse()
+                .setBody("1234")
+                .setSocketPolicy(DISCONNECT_DURING_RESPONSE_BODY));
+
+        Call<ResponseBody> buffered = example.getBody();
+        // When buffering we will detect all socket problems before returning the Response.
+        try {
+            buffered.execute();
+            fail();
+        } catch (IOException e) {
+            assertThat(e).hasMessage("unexpected end of stream");
+        }
+    }
 }
