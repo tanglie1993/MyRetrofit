@@ -39,6 +39,10 @@ public class OkHttpCall implements Call {
 
     @Override
     public void enqueue(Callback callback) {
+        if(isExecuted){
+            throw new IllegalStateException("Already executed.");
+        }
+        isExecuted = true;
         if(serviceMethod.method!= null && serviceMethod.method.equals("POST")){
             try {
                 serviceMethod.request.newBuilder().method("POST",

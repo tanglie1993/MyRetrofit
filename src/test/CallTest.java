@@ -579,4 +579,24 @@ public final class CallTest {
         call.execute();
         assertThat(call.isExecuted()).isTrue();
     }
+
+    @Test
+    public void reportsExecutedAsync() throws InterruptedException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setBody("Hi"));
+
+        Call<String> call = example.getString();
+        assertThat(call.isExecuted()).isFalse();
+
+        call.enqueue(new Callback<String>() {
+            @Override public void onResponse(Call<String> call, Response<String> response) {}
+            @Override public void onFailure(Call<String> call, Throwable t) {}
+        });
+        assertThat(call.isExecuted()).isTrue();
+    }
 }
