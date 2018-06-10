@@ -16,7 +16,9 @@ import java.io.IOException;
 public class OkHttpCall implements Call {
 
     private volatile boolean isExecuted = false;
+    private volatile boolean isCancelled = false;
     private ServiceMethod serviceMethod;
+    private volatile okhttp3.Call rawCall;
 
     public OkHttpCall(ServiceMethod serviceMethod) {
         this.serviceMethod = serviceMethod;
@@ -27,12 +29,18 @@ public class OkHttpCall implements Call {
         if(isExecuted){
             throw new IllegalStateException("Already executed.");
         }
+        if(isCancelled){
+            throw new IOException("Canceled");
+        }
         isExecuted = true;
         if(serviceMethod.method!= null && serviceMethod.method.equals("POST")){
             serviceMethod.request.newBuilder().method("POST", ((Converter<String, RequestBody>) serviceMethod.requestBodyConverter)
                     .convert(serviceMethod.requestBody));
         }
-        okhttp3.Call rawCall = serviceMethod.client.newCall(serviceMethod.request);
+        rawCall = serviceMethod.client.newCall(serviceMethod.request);
+        if(isCancelled){
+            rawCall.cancel();
+        }
         okhttp3.Response rawResponse = rawCall.execute();
         return parseResponse(rawResponse);
     }
@@ -51,8 +59,11 @@ public class OkHttpCall implements Call {
                 callback.onFailure(OkHttpCall.this, e);
             }
         }
-        okhttp3.Call okhttpCall = serviceMethod.client.newCall(serviceMethod.request);
-        okhttpCall.enqueue(new okhttp3.Callback() {
+        rawCall = serviceMethod.client.newCall(serviceMethod.request);
+        if(isCancelled){
+            rawCall.cancel();
+        }
+        rawCall.enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
                 callback.onFailure(OkHttpCall.this, e);
@@ -72,6 +83,22 @@ public class OkHttpCall implements Call {
     @Override
     public boolean isExecuted() {
         return isExecuted;
+    }
+
+    @Override
+    public void cancel() {
+        if(isCancelled){
+            return;
+        }
+        if(rawCall != null){
+            rawCall.cancel();
+        }
+        isCancelled = true;
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return isCancelled;
     }
 
     private Response parseResponse(okhttp3.Response response) throws IOException {

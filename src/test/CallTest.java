@@ -599,4 +599,24 @@ public final class CallTest {
         });
         assertThat(call.isExecuted()).isTrue();
     }
+
+    @Test
+    public void cancelBeforeExecute() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service service = retrofit.create(Service.class);
+        Call<String> call = service.getString();
+
+        call.cancel();
+        assertThat(call.isCanceled()).isTrue();
+
+        try {
+            call.execute();
+            fail();
+        } catch (IOException e) {
+            assertThat(e).hasMessage("Canceled");
+        }
+    }
 }
