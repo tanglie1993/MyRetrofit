@@ -32,4 +32,8 @@ public class Response<T> {
     public ResponseBody errorBody() {
         return errorBody;
     }
+
+    public okhttp3.Response raw() {
+        return rawResponse;
+    }
 }
