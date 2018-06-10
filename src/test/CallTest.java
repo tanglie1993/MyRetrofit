@@ -619,4 +619,32 @@ public final class CallTest {
             assertThat(e).hasMessage("Canceled");
         }
     }
+
+    @Test
+    public void cancelBeforeEnqueue() throws Exception {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service service = retrofit.create(Service.class);
+        Call<String> call = service.getString();
+
+        call.cancel();
+        assertThat(call.isCanceled()).isTrue();
+
+        final AtomicReference<Throwable> failureRef = new AtomicReference<>();
+        final CountDownLatch latch = new CountDownLatch(1);
+        call.enqueue(new Callback<String>() {
+            @Override public void onResponse(Call<String> call, Response<String> response) {
+                throw new AssertionError();
+            }
+
+            @Override public void onFailure(Call<String> call, Throwable t) {
+                failureRef.set(t);
+                latch.countDown();
+            }
+        });
+        assertTrue(latch.await(10, SECONDS));
+        assertThat(failureRef.get()).hasMessage("Canceled");
+    }
 }
