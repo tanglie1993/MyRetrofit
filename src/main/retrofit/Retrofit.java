@@ -1,15 +1,7 @@
 package main.retrofit;
 
-import main.retrofit.okhttp.Body;
-import main.retrofit.okhttp.GET;
-import main.retrofit.okhttp.POST;
-import main.retrofit.okhttp.Streaming;
 import okhttp3.*;
-import okio.BufferedSink;
-import okio.BufferedSource;
-import test.CallTest;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -17,7 +9,6 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by pc on 2018/5/29.
@@ -40,7 +31,7 @@ public class Retrofit {
                 new InvocationHandler() {
                     @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                        return ServiceMethod.generateServiceMethod(Retrofit.this, method, args);
+                        return ServiceMethod.generateOkHttpCall(Retrofit.this, method, args);
                     }
                 });
     }
