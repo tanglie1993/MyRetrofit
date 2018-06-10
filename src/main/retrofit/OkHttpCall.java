@@ -65,6 +65,11 @@ public class OkHttpCall implements Call {
         });
     }
 
+    @Override
+    public boolean isExecuted() {
+        return isExecuted;
+    }
+
     private Response parseResponse(okhttp3.Response response) throws IOException {
         int code = response.code();
 

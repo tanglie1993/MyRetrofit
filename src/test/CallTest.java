@@ -562,4 +562,21 @@ public final class CallTest {
         assertThat(rawBody.contentLength()).isEqualTo(0);
         assertThat(rawBody.contentType().toString()).isEqualTo("text/stringy");
     }
+
+    @Test
+    public void reportsExecutedSync() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service example = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setBody("Hi"));
+
+        Call<String> call = example.getString();
+        assertThat(call.isExecuted()).isFalse();
+
+        call.execute();
+        assertThat(call.isExecuted()).isTrue();
+    }
 }
