@@ -24,6 +24,11 @@ public class OkHttpCall implements Call {
         this.serviceMethod = serviceMethod;
     }
 
+    public OkHttpCall(OkHttpCall okHttpCall) {
+        this.serviceMethod = okHttpCall.serviceMethod;
+        this.rawCall = okHttpCall.rawCall;
+    }
+
     @Override
     public Response<Object> execute() throws IOException {
         if(isExecuted){
@@ -98,7 +103,17 @@ public class OkHttpCall implements Call {
 
     @Override
     public boolean isCanceled() {
-        return isCancelled;
+        if (isCancelled) {
+            return true;
+        }
+        synchronized (this) {
+            return rawCall != null && rawCall.isCanceled();
+        }
+    }
+
+    @Override
+    public Call clone() {
+        return new OkHttpCall(this);
     }
 
     private Response parseResponse(okhttp3.Response response) throws IOException {

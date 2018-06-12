@@ -647,4 +647,89 @@ public final class CallTest {
         assertTrue(latch.await(10, SECONDS));
         assertThat(failureRef.get()).hasMessage("Canceled");
     }
+
+    @Test
+    public void cloningExecutedRequestDoesNotCopyState() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service service = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setBody("Hi"));
+        server.enqueue(new MockResponse().setBody("Hello"));
+
+        Call<String> call = service.getString();
+        assertThat(call.execute().body()).isEqualTo("Hi");
+
+        Call<String> cloned = call.clone();
+        assertThat(cloned.execute().body()).isEqualTo("Hello");
+    }
+
+    @Test
+    public void cancelRequest() throws InterruptedException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service service = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE));
+
+        Call<String> call = service.getString();
+
+        final AtomicReference<Throwable> failureRef = new AtomicReference<>();
+        final CountDownLatch latch = new CountDownLatch(1);
+        call.enqueue(new Callback<String>() {
+            @Override public void onResponse(Call<String> call, Response<String> response) {
+                throw new AssertionError();
+            }
+
+            @Override public void onFailure(Call<String> call, Throwable t) {
+                failureRef.set(t);
+                latch.countDown();
+            }
+        });
+
+        call.cancel();
+        assertThat(call.isCanceled()).isTrue();
+
+        assertTrue(latch.await(10, SECONDS));
+        assertThat(failureRef.get()).isInstanceOf(IOException.class).hasMessage("Canceled");
+    }
+
+    @Test
+    public void cancelOkHttpRequest() throws InterruptedException {
+        OkHttpClient client = new OkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .client(client)
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service service = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE));
+
+        Call<String> call = service.getString();
+
+        final AtomicReference<Throwable> failureRef = new AtomicReference<>();
+        final CountDownLatch latch = new CountDownLatch(1);
+        call.enqueue(new Callback<String>() {
+            @Override public void onResponse(Call<String> call, Response<String> response) {
+                throw new AssertionError();
+            }
+
+            @Override public void onFailure(Call<String> call, Throwable t) {
+                failureRef.set(t);
+                latch.countDown();
+            }
+        });
+
+        // Cancel the underlying HTTP Call. Should be reflected accurately back in the Retrofit Call.
+        client.dispatcher().cancelAll();
+        assertThat(call.isCanceled()).isTrue();
+
+        assertTrue(latch.await(10, SECONDS));
+        assertThat(failureRef.get()).isInstanceOf(IOException.class).hasMessage("Canceled");
+    }
 }

@@ -19,4 +19,6 @@ public interface Call<T> extends Cloneable {
     void cancel();
 
     boolean isCanceled();
+
+    Call<T> clone();
 }
