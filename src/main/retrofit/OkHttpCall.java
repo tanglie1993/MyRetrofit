@@ -56,6 +56,7 @@ public class OkHttpCall implements Call {
                 rawCall = serviceMethod.toCall();
             }
         }catch (Throwable e){
+            throwIfFatal(e);
             creationFailure = e;
             if(e instanceof RuntimeException || e instanceof Error){
                 throw e;
@@ -68,6 +69,16 @@ public class OkHttpCall implements Call {
         return parseResponse(rawResponse);
     }
 
+    private void throwIfFatal(Throwable e) {
+        if (e instanceof VirtualMachineError) {
+            throw (VirtualMachineError) e;
+        } else if (e instanceof ThreadDeath) {
+            throw (ThreadDeath) e;
+        } else if (e instanceof LinkageError) {
+            throw (LinkageError) e;
+        }
+    }
+
     @Override
     public void enqueue(Callback callback) {
         if(isExecuted){
@@ -76,12 +87,14 @@ public class OkHttpCall implements Call {
         isExecuted = true;
         if (creationFailure != null) {
             callback.onFailure(OkHttpCall.this, creationFailure);
+            return;
         }
         try {
             if(rawCall == null && creationFailure == null){
                 rawCall = serviceMethod.toCall();
             }
         } catch (Throwable e) {
+            throwIfFatal(e);
             creationFailure = e;
             callback.onFailure(OkHttpCall.this, e);
             return;
@@ -153,6 +166,7 @@ public class OkHttpCall implements Call {
                     rawCall = serviceMethod.toCall();
                 }
             } catch (Throwable e) {
+                throwIfFatal(e);
                 creationFailure = e;
                 if(e instanceof RuntimeException){
                     throw (RuntimeException) e;
