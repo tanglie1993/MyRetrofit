@@ -55,9 +55,9 @@ public class OkHttpCall implements Call {
             if(rawCall == null){
                 rawCall = serviceMethod.toCall();
             }
-        }catch (Exception e){
+        }catch (Throwable e){
             creationFailure = e;
-            if(e instanceof RuntimeException){
+            if(e instanceof RuntimeException || e instanceof Error){
                 throw e;
             }
         }
@@ -81,7 +81,7 @@ public class OkHttpCall implements Call {
             if(rawCall == null && creationFailure == null){
                 rawCall = serviceMethod.toCall();
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             creationFailure = e;
             callback.onFailure(OkHttpCall.this, e);
             return;
