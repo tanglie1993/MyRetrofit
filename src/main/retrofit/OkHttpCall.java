@@ -21,7 +21,7 @@ public class OkHttpCall implements Call {
     private volatile boolean isCancelled = false;
     private ServiceMethod serviceMethod;
     private volatile okhttp3.Call rawCall;
-    private Exception creationFailure;
+    private Throwable creationFailure;
 
     public OkHttpCall(ServiceMethod serviceMethod) {
         this.serviceMethod = serviceMethod;
@@ -45,6 +45,9 @@ public class OkHttpCall implements Call {
             }
             if(creationFailure instanceof RuntimeException){
                 throw (RuntimeException) creationFailure;
+            }
+            if(creationFailure instanceof Error){
+                throw (Error) creationFailure;
             }
         }
         isExecuted = true;
@@ -141,12 +144,14 @@ public class OkHttpCall implements Call {
                 if(rawCall == null){
                     rawCall = serviceMethod.toCall();
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 creationFailure = e;
                 if(e instanceof RuntimeException){
                     throw (RuntimeException) e;
-                }else{
+                } else if(e instanceof Exception){
                     throw new RuntimeException(e);
+                } else if(e instanceof Error){
+                    throw (Error) e;
                 }
             }
         }

@@ -799,41 +799,42 @@ public final class CallTest {
         }
         assertThat(writeCount.get()).isEqualTo(1);
     }
-//
-//    @Test public void requestThrowingNonFatalErrorBeforeExecuteFailsExecute() throws IOException {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(server.url("/"))
-//                .addConverterFactory(new ToStringConverterFactory())
-//                .build();
-//        Service service = retrofit.create(Service.class);
-//
-//        server.enqueue(new MockResponse());
-//
-//        final AtomicInteger writeCount = new AtomicInteger();
-//        Object a = new Object() {
-//            @Override public String toString() {
-//                writeCount.incrementAndGet();
-//                throw new Error("Broken!");
-//            }
-//        };
-//        Call<String> call = service.postRequestBody(a);
-//
-//        try {
-//            call.request();
-//            fail();
-//        } catch (Error e) {
-//            assertThat(e).hasMessage("Broken!");
-//        }
-//        assertThat(writeCount.get()).isEqualTo(1);
-//
-//        try {
-//            call.execute();
-//            fail();
-//        } catch (Error e) {
-//            assertThat(e).hasMessage("Broken!");
-//        }
-//        assertThat(writeCount.get()).isEqualTo(1);
-//    }
+
+    @Test
+    public void requestThrowingNonFatalErrorBeforeExecuteFailsExecute() throws IOException {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(server.url("/"))
+                .addConverterFactory(new ToStringConverterFactory())
+                .build();
+        Service service = retrofit.create(Service.class);
+
+        server.enqueue(new MockResponse());
+
+        final AtomicInteger writeCount = new AtomicInteger();
+        Object a = new Object() {
+            @Override public String toString() {
+                writeCount.incrementAndGet();
+                throw new Error("Broken!");
+            }
+        };
+        Call<String> call = service.postRequestBody(a);
+
+        try {
+            call.request();
+            fail();
+        } catch (Error e) {
+            assertThat(e).hasMessage("Broken!");
+        }
+        assertThat(writeCount.get()).isEqualTo(1);
+
+        try {
+            call.execute();
+            fail();
+        } catch (Error e) {
+            assertThat(e).hasMessage("Broken!");
+        }
+        assertThat(writeCount.get()).isEqualTo(1);
+    }
 //
 //    @Test public void requestAfterExecuteReturnsCachedValue() throws IOException {
 //        Retrofit retrofit = new Retrofit.Builder()
