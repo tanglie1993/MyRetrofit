@@ -24,11 +24,14 @@ public class ServiceMethod {
     Converter<String, RequestBody> requestBodyConverter;
     Converter<ResponseBody, ?> responseBodyConverter;
     OkHttpClient client;
+    Annotation[][] parameterAnnotations;
+    Annotation[] declaredAnnotations;
+    Object[] args;
 
     public static Call generateOkHttpCall(Retrofit retrofit, Method method, Object[] args) {
         if(method.getDeclaredAnnotations().length > 0){
             if(method.getDeclaredAnnotations()[0] instanceof GET){
-                return generateGet(retrofit, method);
+                return generateGet(retrofit, method, args);
             }else if(method.getDeclaredAnnotations()[0] instanceof POST){
                 return generatePost(retrofit, method, args);
             }
@@ -36,10 +39,13 @@ public class ServiceMethod {
         return null;
     }
 
-    private static Call generateGet(Retrofit retrofit, Method method) {
+    private static Call generateGet(Retrofit retrofit, Method method, Object[] args) {
         ServiceMethod serviceMethod = new ServiceMethod();
+        serviceMethod.parameterAnnotations = method.getParameterAnnotations();
+        serviceMethod.declaredAnnotations = method.getDeclaredAnnotations();
         serviceMethod.client = retrofit.client;
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
+        serviceMethod.args = args;
         GET get = (GET) method.getDeclaredAnnotations()[0];
         serviceMethod.relativeUrl = get.value();
         serviceMethod.requestBodyConverter = (Converter<String, RequestBody>) retrofit.searchForRequestConverter(method.getGenericReturnType(),
@@ -54,31 +60,14 @@ public class ServiceMethod {
         ServiceMethod serviceMethod = new ServiceMethod();
         serviceMethod.client = retrofit.client;
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
+        serviceMethod.parameterAnnotations = method.getParameterAnnotations();
+        serviceMethod.declaredAnnotations = method.getDeclaredAnnotations();
         POST post = (POST) method.getDeclaredAnnotations()[0];
         serviceMethod.relativeUrl = post.value();
-        int paramIndex = 0;
+        serviceMethod.args = args;
         serviceMethod.requestBody = "";
-        outer:  for(Annotation[] parameterAnnotation : method.getParameterAnnotations()){
-            if(parameterAnnotation.length > 0){
-                for(Annotation annotation : parameterAnnotation){
-                    if(annotation instanceof Body){
-                        serviceMethod.requestBody = (String) args[paramIndex];
-                        break outer;
-                    }
-                    if(annotation instanceof Path){
-                        String pattern = "\\{" + ((Path) annotation).value() + "\\}";
-                        Pattern r = Pattern.compile(pattern);
-                        Matcher m = r.matcher(serviceMethod.relativeUrl);
-                        serviceMethod.relativeUrl = m.replaceAll(args[paramIndex].toString());
-
-                        break outer;
-                    }
-                }
-            }
-            paramIndex++;
-        }
         serviceMethod.requestBodyConverter = (Converter<String, RequestBody>) retrofit.searchForRequestConverter(method.getGenericReturnType(),
-                method.getParameterAnnotations()[paramIndex],
+                method.getParameterAnnotations()[0],
                 method.getDeclaredAnnotations());
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
                 method.getDeclaredAnnotations());
@@ -90,6 +79,27 @@ public class ServiceMethod {
         RequestBuilder requestBuilder = new RequestBuilder(method, baseUrl, relativeUrl);
         if(requestBody != null){
             requestBuilder.setBody(requestBodyConverter.convert(requestBody));
+        }
+
+        int paramIndex = 0;
+        outer:  for(Annotation[] parameterAnnotation : parameterAnnotations){
+            if(parameterAnnotation.length > 0){
+                for(Annotation annotation : parameterAnnotation){
+                    if(annotation instanceof Body){
+                        requestBody = (String) args[paramIndex];
+                        break outer;
+                    }
+                    if(annotation instanceof Path){
+                        String pattern = "\\{" + ((Path) annotation).value() + "\\}";
+                        Pattern r = Pattern.compile(pattern);
+                        Matcher m = r.matcher(relativeUrl);
+                        relativeUrl = m.replaceAll(args[paramIndex].toString());
+
+                        break outer;
+                    }
+                }
+            }
+            paramIndex++;
         }
         return client.newCall(requestBuilder.build());
     }

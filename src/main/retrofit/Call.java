@@ -22,5 +22,5 @@ public interface Call<T> extends Cloneable {
 
     Call<T> clone();
 
-    void request();
+    Request request();
 }

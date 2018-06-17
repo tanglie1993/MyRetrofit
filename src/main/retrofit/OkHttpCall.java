@@ -1,6 +1,8 @@
 package main.retrofit;
 
+import com.google.caliper.model.Run;
 import okhttp3.MediaType;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.Buffer;
@@ -19,6 +21,7 @@ public class OkHttpCall implements Call {
     private volatile boolean isCancelled = false;
     private ServiceMethod serviceMethod;
     private volatile okhttp3.Call rawCall;
+    private Exception creationFailure;
 
     public OkHttpCall(ServiceMethod serviceMethod) {
         this.serviceMethod = serviceMethod;
@@ -26,7 +29,6 @@ public class OkHttpCall implements Call {
 
     public OkHttpCall(OkHttpCall okHttpCall) {
         this.serviceMethod = okHttpCall.serviceMethod;
-        this.rawCall = okHttpCall.rawCall;
     }
 
     @Override
@@ -37,8 +39,25 @@ public class OkHttpCall implements Call {
         if(isCancelled){
             throw new IOException("Canceled");
         }
+        if (creationFailure != null) {
+            if(creationFailure instanceof IOException){
+                throw (IOException) creationFailure;
+            }
+            if(creationFailure instanceof RuntimeException){
+                throw (RuntimeException) creationFailure;
+            }
+        }
         isExecuted = true;
-        rawCall = serviceMethod.toCall();
+        try{
+            if(rawCall == null){
+                rawCall = serviceMethod.toCall();
+            }
+        }catch (Exception e){
+            creationFailure = e;
+            if(e instanceof RuntimeException){
+                throw e;
+            }
+        }
         if(isCancelled){
             rawCall.cancel();
         }
@@ -52,9 +71,15 @@ public class OkHttpCall implements Call {
             throw new IllegalStateException("Already executed.");
         }
         isExecuted = true;
+        if (creationFailure != null) {
+            callback.onFailure(OkHttpCall.this, creationFailure);
+        }
         try {
-            rawCall = serviceMethod.toCall();
+            if(rawCall == null){
+                rawCall = serviceMethod.toCall();
+            }
         } catch (Exception e) {
+            creationFailure = e;
             callback.onFailure(OkHttpCall.this, e);
             return;
         }
@@ -110,8 +135,23 @@ public class OkHttpCall implements Call {
     }
 
     @Override
-    public void request() {
-
+    public Request request() {
+        if(rawCall == null){
+            try {
+                if(rawCall == null){
+                    rawCall = serviceMethod.toCall();
+                }
+            } catch (Exception e) {
+                creationFailure = e;
+                if(e instanceof RuntimeException){
+                    throw (RuntimeException) e;
+                }else{
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        okhttp3.Call call = rawCall;
+        return call.request();
     }
 
     private Response parseResponse(okhttp3.Response response) throws IOException {
