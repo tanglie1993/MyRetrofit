@@ -109,6 +109,11 @@ public class OkHttpCall implements Call {
         return new OkHttpCall(this);
     }
 
+    @Override
+    public void request() {
+
+    }
+
     private Response parseResponse(okhttp3.Response response) throws IOException {
         int code = response.code();
 

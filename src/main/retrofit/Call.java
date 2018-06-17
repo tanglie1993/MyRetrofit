@@ -21,4 +21,6 @@ public interface Call<T> extends Cloneable {
     boolean isCanceled();
 
     Call<T> clone();
+
+    void request();
 }

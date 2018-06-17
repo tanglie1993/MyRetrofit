@@ -3,11 +3,14 @@ package main.retrofit;
 import main.retrofit.okhttp.Body;
 import main.retrofit.okhttp.GET;
 import main.retrofit.okhttp.POST;
+import main.retrofit.okhttp.Path;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by pc on 2018/6/9.
@@ -60,6 +63,14 @@ public class ServiceMethod {
                 for(Annotation annotation : parameterAnnotation){
                     if(annotation instanceof Body){
                         serviceMethod.requestBody = (String) args[paramIndex];
+                        break outer;
+                    }
+                    if(annotation instanceof Path){
+                        String pattern = "\\{" + ((Path) annotation).value() + "\\}";
+                        Pattern r = Pattern.compile(pattern);
+                        Matcher m = r.matcher(serviceMethod.relativeUrl);
+                        serviceMethod.relativeUrl = m.replaceAll(args[paramIndex].toString());
+
                         break outer;
                     }
                 }
