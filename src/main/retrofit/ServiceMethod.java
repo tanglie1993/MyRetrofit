@@ -3,10 +3,7 @@ package main.retrofit;
 import main.retrofit.okhttp.Body;
 import main.retrofit.okhttp.GET;
 import main.retrofit.okhttp.POST;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -17,10 +14,11 @@ import java.lang.reflect.Method;
  */
 public class ServiceMethod {
 
-    Request request;
     String method;
     String requestBody;
-    Converter<?, RequestBody> requestBodyConverter;
+    String relativeUrl;
+    String baseUrl;
+    Converter<String, RequestBody> requestBodyConverter;
     Converter<ResponseBody, ?> responseBodyConverter;
     OkHttpClient client;
 
@@ -38,15 +36,13 @@ public class ServiceMethod {
     private static Call generateGet(Retrofit retrofit, Method method) {
         ServiceMethod serviceMethod = new ServiceMethod();
         serviceMethod.client = retrofit.client;
+        serviceMethod.baseUrl = retrofit.baseUrl.toString();
         GET get = (GET) method.getDeclaredAnnotations()[0];
-        String path = get.value();
-        serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
+        serviceMethod.relativeUrl = get.value();
+        serviceMethod.requestBodyConverter = (Converter<String, RequestBody>) retrofit.searchForRequestConverter(method.getGenericReturnType(),
                 null, method.getDeclaredAnnotations());
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
                 method.getDeclaredAnnotations());
-        serviceMethod.request = new Request.Builder()
-                .url(retrofit.baseUrl + path)
-                .build();
         serviceMethod.method ="GET";
         return new OkHttpCall(serviceMethod);
     }
@@ -54,8 +50,9 @@ public class ServiceMethod {
     private static Call generatePost(Retrofit retrofit, Method method, Object[] args) {
         ServiceMethod serviceMethod = new ServiceMethod();
         serviceMethod.client = retrofit.client;
+        serviceMethod.baseUrl = retrofit.baseUrl.toString();
         POST post = (POST) method.getDeclaredAnnotations()[0];
-        String path = post.value();
+        serviceMethod.relativeUrl = post.value();
         int paramIndex = 0;
         serviceMethod.requestBody = "";
         outer:  for(Annotation[] parameterAnnotation : method.getParameterAnnotations()){
@@ -69,16 +66,21 @@ public class ServiceMethod {
             }
             paramIndex++;
         }
-        serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
+        serviceMethod.requestBodyConverter = (Converter<String, RequestBody>) retrofit.searchForRequestConverter(method.getGenericReturnType(),
                 method.getParameterAnnotations()[paramIndex],
                 method.getDeclaredAnnotations());
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
                 method.getDeclaredAnnotations());
-        serviceMethod.request = new Request.Builder()
-                .url(retrofit.baseUrl + path)
-                .build();
         serviceMethod.method = "POST";
         return new OkHttpCall(serviceMethod);
+    }
+
+    okhttp3.Call toCall() throws IOException {
+        RequestBuilder requestBuilder = new RequestBuilder(method, baseUrl, relativeUrl);
+        if(requestBody != null){
+            requestBuilder.setBody(requestBodyConverter.convert(requestBody));
+        }
+        return client.newCall(requestBuilder.build());
     }
 
 }

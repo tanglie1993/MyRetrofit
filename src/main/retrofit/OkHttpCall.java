@@ -38,11 +38,7 @@ public class OkHttpCall implements Call {
             throw new IOException("Canceled");
         }
         isExecuted = true;
-        if(serviceMethod.method!= null && serviceMethod.method.equals("POST")){
-            serviceMethod.request.newBuilder().method("POST", ((Converter<String, RequestBody>) serviceMethod.requestBodyConverter)
-                    .convert(serviceMethod.requestBody));
-        }
-        rawCall = serviceMethod.client.newCall(serviceMethod.request);
+        rawCall = serviceMethod.toCall();
         if(isCancelled){
             rawCall.cancel();
         }
@@ -56,15 +52,12 @@ public class OkHttpCall implements Call {
             throw new IllegalStateException("Already executed.");
         }
         isExecuted = true;
-        if(serviceMethod.method!= null && serviceMethod.method.equals("POST")){
-            try {
-                serviceMethod.request.newBuilder().method("POST",
-                        ((Converter<String, RequestBody>) serviceMethod.requestBodyConverter).convert(serviceMethod.requestBody));
-            } catch (Exception e) {
-                callback.onFailure(OkHttpCall.this, e);
-            }
+        try {
+            rawCall = serviceMethod.toCall();
+        } catch (Exception e) {
+            callback.onFailure(OkHttpCall.this, e);
+            return;
         }
-        rawCall = serviceMethod.client.newCall(serviceMethod.request);
         if(isCancelled){
             rawCall.cancel();
         }
