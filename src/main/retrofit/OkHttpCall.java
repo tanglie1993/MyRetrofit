@@ -78,7 +78,7 @@ public class OkHttpCall implements Call {
             callback.onFailure(OkHttpCall.this, creationFailure);
         }
         try {
-            if(rawCall == null){
+            if(rawCall == null && creationFailure == null){
                 rawCall = serviceMethod.toCall();
             }
         } catch (Exception e) {
@@ -139,9 +139,17 @@ public class OkHttpCall implements Call {
 
     @Override
     public Request request() {
+        if (creationFailure != null) {
+            if(creationFailure instanceof RuntimeException){
+                throw (RuntimeException) creationFailure;
+            }
+            if(creationFailure instanceof Error){
+                throw (Error) creationFailure;
+            }
+        }
         if(rawCall == null){
             try {
-                if(rawCall == null){
+                if(rawCall == null && creationFailure == null){
                     rawCall = serviceMethod.toCall();
                 }
             } catch (Throwable e) {
