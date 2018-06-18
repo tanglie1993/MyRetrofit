@@ -51,158 +51,158 @@ public final class ResponseTest {
     assertThat(response.errorBody()).isNull();
   }
 
-//  @Test
-//  public void successNullAllowed() {
-//    Response<Object> response = Response.success(null);
-//    assertThat(response.isSuccessful()).isTrue();
-//    assertThat(response.body()).isNull();
-//  }
-//
-//  @Test
-//  public void successWithHeaders() {
-//    Object body = new Object();
-//    Headers headers = Headers.of("foo", "bar");
-//    Response<Object> response = Response.success(body, headers);
-//    assertThat(response.raw()).isNotNull();
-//    assertThat(response.code()).isEqualTo(200);
-//    assertThat(response.message()).isEqualTo("OK");
-//    assertThat(response.headers().toMultimap()).isEqualTo(headers.toMultimap());
-//    assertThat(response.isSuccessful()).isTrue();
-//    assertThat(response.body()).isSameAs(body);
-//    assertThat(response.errorBody()).isNull();
-//  }
-//
-//  @Test
-//  public void successWithNullHeadersThrows() {
-//    try {
-//      Response.success("", (okhttp3.Headers) null);
-//      fail();
-//    } catch (NullPointerException e) {
-//      assertThat(e).hasMessage("headers == null");
-//    }
-//  }
-//
-//  @Test
-//  public void successWithStatusCode() {
-//    Object body = new Object();
-//    Response<Object> response = Response.success(204, body);
-//    assertThat(response.code()).isEqualTo(204);
-//    assertThat(response.message()).isEqualTo("Response.success()");
-//    assertThat(response.headers().size()).isZero();
-//    assertThat(response.isSuccessful()).isTrue();
-//    assertThat(response.body()).isSameAs(body);
-//    assertThat(response.errorBody()).isNull();
-//  }
-//
-//  @Test
-//  public void successWithRawResponse() {
-//    Object body = new Object();
-//    Response<Object> response = Response.success(body, successResponse);
-//    assertThat(response.raw()).isSameAs(successResponse);
-//    assertThat(response.code()).isEqualTo(200);
-//    assertThat(response.message()).isEqualTo("OK");
-//    assertThat(response.headers().size()).isZero();
-//    assertThat(response.isSuccessful()).isTrue();
-//    assertThat(response.body()).isSameAs(body);
-//    assertThat(response.errorBody()).isNull();
-//  }
-//
-//  @Test
-//  public void successWithNullRawResponseThrows() {
-//    try {
-//      Response.success("", (okhttp3.Response) null);
-//      fail();
-//    } catch (NullPointerException e) {
-//      assertThat(e).hasMessage("rawResponse == null");
-//    }
-//  }
-//
-//  @Test
-//  public void successWithErrorRawResponseThrows() {
-//    try {
-//      Response.success("", errorResponse);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("rawResponse must be successful response");
-//    }
-//  }
-//
-//  @Test
-//  public void error() {
-//    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
-//    Response<?> response = Response.error(400, errorBody);
-//    assertThat(response.raw()).isNotNull();
-//    assertThat(response.code()).isEqualTo(400);
-//    assertThat(response.message()).isEqualTo("Response.error()");
-//    assertThat(response.headers().size()).isZero();
-//    assertThat(response.isSuccessful()).isFalse();
-//    assertThat(response.body()).isNull();
-//    assertThat(response.errorBody()).isSameAs(errorBody);
-//  }
-//
-//  @Test
-//  public void nullErrorThrows() {
-//    try {
-//      Response.error(400, null);
-//      fail();
-//    } catch (NullPointerException e) {
-//      assertThat(e).hasMessage("body == null");
-//    }
-//  }
-//
-//  @Test
-//  public void errorWithSuccessCodeThrows() {
-//    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
-//    try {
-//      Response.error(200, errorBody);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("code < 400: 200");
-//    }
-//  }
-//
-//  @Test
-//  public void errorWithRawResponse() {
-//    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
-//    Response<?> response = Response.error(errorBody, errorResponse);
-//    assertThat(response.raw()).isSameAs(errorResponse);
-//    assertThat(response.code()).isEqualTo(400);
-//    assertThat(response.message()).isEqualTo("Broken!");
-//    assertThat(response.headers().size()).isZero();
-//    assertThat(response.isSuccessful()).isFalse();
-//    assertThat(response.body()).isNull();
-//    assertThat(response.errorBody()).isSameAs(errorBody);
-//  }
-//
-//  @Test
-//  public void nullErrorWithRawResponseThrows() {
-//    try {
-//      Response.error(null, errorResponse);
-//      fail();
-//    } catch (NullPointerException e) {
-//      assertThat(e).hasMessage("body == null");
-//    }
-//  }
-//
-//  @Test
-//  public void errorWithNullRawResponseThrows() {
-//    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
-//    try {
-//      Response.error(errorBody, null);
-//      fail();
-//    } catch (NullPointerException e) {
-//      assertThat(e).hasMessage("rawResponse == null");
-//    }
-//  }
-//
-//  @Test
-//  public void errorWithSuccessRawResponseThrows() {
-//    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
-//    try {
-//      Response.error(errorBody, successResponse);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("rawResponse should not be successful response");
-//    }
-//  }
+  @Test
+  public void successNullAllowed() {
+    Response<Object> response = Response.success(null);
+    assertThat(response.isSuccessful()).isTrue();
+    assertThat(response.body()).isNull();
+  }
+
+  @Test
+  public void successWithHeaders() {
+    Object body = new Object();
+    Headers headers = Headers.of("foo", "bar");
+    Response<Object> response = Response.success(body, headers);
+    assertThat(response.raw()).isNotNull();
+    assertThat(response.code()).isEqualTo(200);
+    assertThat(response.message()).isEqualTo("OK");
+    assertThat(response.headers().toMultimap()).isEqualTo(headers.toMultimap());
+    assertThat(response.isSuccessful()).isTrue();
+    assertThat(response.body()).isSameAs(body);
+    assertThat(response.errorBody()).isNull();
+  }
+
+  @Test
+  public void successWithNullHeadersThrows() {
+    try {
+      Response.success("", (okhttp3.Headers) null);
+      fail();
+    } catch (NullPointerException e) {
+      assertThat(e).hasMessage("headers == null");
+    }
+  }
+
+  @Test
+  public void successWithStatusCode() {
+    Object body = new Object();
+    Response<Object> response = Response.success(204, body);
+    assertThat(response.code()).isEqualTo(204);
+    assertThat(response.message()).isEqualTo("Response.success()");
+    assertThat(response.headers().size()).isZero();
+    assertThat(response.isSuccessful()).isTrue();
+    assertThat(response.body()).isSameAs(body);
+    assertThat(response.errorBody()).isNull();
+  }
+
+  @Test
+  public void successWithRawResponse() {
+    Object body = new Object();
+    Response<Object> response = Response.success(body, successResponse);
+    assertThat(response.raw()).isSameAs(successResponse);
+    assertThat(response.code()).isEqualTo(200);
+    assertThat(response.message()).isEqualTo("OK");
+    assertThat(response.headers().size()).isZero();
+    assertThat(response.isSuccessful()).isTrue();
+    assertThat(response.body()).isSameAs(body);
+    assertThat(response.errorBody()).isNull();
+  }
+
+  @Test
+  public void successWithNullRawResponseThrows() {
+    try {
+      Response.success("", (okhttp3.Response) null);
+      fail();
+    } catch (NullPointerException e) {
+      assertThat(e).hasMessage("rawResponse == null");
+    }
+  }
+
+  @Test
+  public void successWithErrorRawResponseThrows() {
+    try {
+      Response.success("", errorResponse);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("rawResponse must be successful response");
+    }
+  }
+
+  @Test
+  public void error() {
+    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
+    Response<?> response = Response.error(400, errorBody);
+    assertThat(response.raw()).isNotNull();
+    assertThat(response.code()).isEqualTo(400);
+    assertThat(response.message()).isEqualTo("Response.error()");
+    assertThat(response.headers().size()).isZero();
+    assertThat(response.isSuccessful()).isFalse();
+    assertThat(response.body()).isNull();
+    assertThat(response.errorBody()).isSameAs(errorBody);
+  }
+
+  @Test
+  public void nullErrorThrows() {
+    try {
+      Response.error(400, null);
+      fail();
+    } catch (NullPointerException e) {
+      assertThat(e).hasMessage("body == null");
+    }
+  }
+
+  @Test
+  public void errorWithSuccessCodeThrows() {
+    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
+    try {
+      Response.error(200, errorBody);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("code < 400: 200");
+    }
+  }
+
+  @Test
+  public void errorWithRawResponse() {
+    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
+    Response<?> response = Response.error(errorBody, errorResponse);
+    assertThat(response.raw()).isSameAs(errorResponse);
+    assertThat(response.code()).isEqualTo(400);
+    assertThat(response.message()).isEqualTo("Broken!");
+    assertThat(response.headers().size()).isZero();
+    assertThat(response.isSuccessful()).isFalse();
+    assertThat(response.body()).isNull();
+    assertThat(response.errorBody()).isSameAs(errorBody);
+  }
+
+  @Test
+  public void nullErrorWithRawResponseThrows() {
+    try {
+      Response.error(null, errorResponse);
+      fail();
+    } catch (NullPointerException e) {
+      assertThat(e).hasMessage("body == null");
+    }
+  }
+
+  @Test
+  public void errorWithNullRawResponseThrows() {
+    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
+    try {
+      Response.error(errorBody, null);
+      fail();
+    } catch (NullPointerException e) {
+      assertThat(e).hasMessage("rawResponse == null");
+    }
+  }
+
+  @Test
+  public void errorWithSuccessRawResponseThrows() {
+    ResponseBody errorBody = ResponseBody.create(null, "Broken!");
+    try {
+      Response.error(errorBody, successResponse);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("rawResponse should not be successful response");
+    }
+  }
 }
