@@ -31,6 +31,9 @@ public class Retrofit {
                 new InvocationHandler() {
                     @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if (method.getDeclaringClass() == Object.class) {
+                            return method.invoke(this, args);
+                        }
                         return ServiceMethod.generateOkHttpCall(Retrofit.this, method, args);
                     }
                 });
