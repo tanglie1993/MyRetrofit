@@ -177,22 +177,22 @@ public final class RetrofitTest {
 
     org.junit.Assert.assertEquals(0, retrofit.newBuilder().converterFactories().size());
   }
-//
-//  @Test
-//  public void responseTypeCannotBeRetrofitResponse() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    CallMethod service = retrofit.create(CallMethod.class);
-//    try {
-//      service.badType1();
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage(
-//          "'retrofit2.Response' is not a valid response body type. Did you mean ResponseBody?\n"
-//              + "    for method CallMethod.badType1");
-//    }
-//  }
+
+  @Test
+  public void responseTypeCannotBeRetrofitResponse() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    CallMethod service = retrofit.create(CallMethod.class);
+    try {
+      service.badType1();
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage(
+          "'main.retrofit.Response' is not a valid response body type. Did you mean ResponseBody?\n"
+              + "    for method CallMethod.badType1");
+    }
+  }
 //
 //  @Test
 //  public void responseTypeCannotBeOkHttpResponse() {

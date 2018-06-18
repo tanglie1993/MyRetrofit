@@ -1,14 +1,17 @@
 package main.retrofit;
 
+import com.google.inject.internal.MoreTypes;
 import main.retrofit.okhttp.Body;
 import main.retrofit.okhttp.GET;
 import main.retrofit.okhttp.POST;
 import main.retrofit.okhttp.Path;
 import okhttp3.*;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +32,18 @@ public class ServiceMethod {
     Object[] args;
 
     public static Call generateOkHttpCall(Retrofit retrofit, Method method, Object[] args) {
+        Type returnType = method.getGenericReturnType();
+        Type[] actualTypeArguments = ((ParameterizedTypeImpl) returnType).getActualTypeArguments();
+        Type responseType = actualTypeArguments[0];
+        if (responseType == Response.class || responseType == okhttp3.Response.class) {
+            throw new IllegalArgumentException("'"
+                    + responseType.getTypeName()
+                    + "' is not a valid response body type. Did you mean ResponseBody?"
+                    + "\n    for method "
+                    + method.getDeclaringClass().getSimpleName()
+                    + "."
+                    + method.getName());
+        }
         if(method.getDeclaredAnnotations().length > 0){
             if(method.getDeclaredAnnotations()[0] instanceof GET){
                 return generateGet(retrofit, method, args);
