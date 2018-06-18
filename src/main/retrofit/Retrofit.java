@@ -64,11 +64,24 @@ public class Retrofit {
         return BuiltInConverter.INSTANCE.requestBodyConverter(genericReturnType, parameterAnnotations, declaredAnnotations, this);
     }
 
+    public Builder newBuilder() {
+        return new Builder(this);
+    }
+
     public static class Builder {
 
         private HttpUrl baseUrl;
         private List<Converter.Factory> factoryList = new ArrayList<>();
         private OkHttpClient client = new OkHttpClient();
+
+        public Builder() {
+        }
+
+        public Builder(Retrofit retrofit) {
+            this.client = retrofit.client;
+            this.baseUrl = retrofit.baseUrl;
+            this.factoryList = retrofit.factoryList;
+        }
 
         public Builder baseUrl(HttpUrl url) {
             this.baseUrl = url;
@@ -87,6 +100,10 @@ public class Retrofit {
         public Builder client(OkHttpClient client) {
             this.client = client;
             return this;
+        }
+
+        public List<Converter.Factory> converterFactories() {
+            return factoryList;
         }
     }
 }

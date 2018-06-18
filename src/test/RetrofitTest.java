@@ -16,9 +16,11 @@
 package test;
 
 import main.retrofit.Call;
+import main.retrofit.Converter;
 import main.retrofit.Response;
 import main.retrofit.Retrofit;
 import main.retrofit.okhttp.*;
+import okhttp3.HttpUrl;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.MockWebServer;
@@ -29,12 +31,14 @@ import java.lang.annotation.Retention;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 public final class RetrofitTest {
   @Rule
@@ -133,7 +137,7 @@ public final class RetrofitTest {
       assertThat(e).hasMessage("API interfaces must not extend other interfaces.");
     }
   }
-//
+
 //  @Test
 //  public void cloneSharesStatefulInstances() {
 //    CallAdapter.Factory callAdapter = mock(CallAdapter.Factory.class);
@@ -165,14 +169,14 @@ public final class RetrofitTest {
 //    assertSame(callFactory, two.callFactory());
 //  }
 //
-//  @Test
-//  public void builtInConvertersAbsentInCloneBuilder() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//
-//    assertEquals(0, retrofit.newBuilder().converterFactories().size());
-//  }
+  @Test
+  public void builtInConvertersAbsentInCloneBuilder() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+
+    org.junit.Assert.assertEquals(0, retrofit.newBuilder().converterFactories().size());
+  }
 //
 //  @Test
 //  public void responseTypeCannotBeRetrofitResponse() {
