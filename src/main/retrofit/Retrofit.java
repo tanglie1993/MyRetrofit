@@ -27,6 +27,12 @@ public class Retrofit {
     }
 
     public <T> T create(final Class<T> service) {
+        if (!service.isInterface()) {
+            throw new IllegalArgumentException("API declarations must be interfaces.");
+        }
+        if (service.getInterfaces().length > 0) {
+            throw new IllegalArgumentException("API interfaces must not extend other interfaces.");
+        }
         return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[]{service},
                 new InvocationHandler() {
                     @Override

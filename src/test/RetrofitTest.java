@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 public final class RetrofitTest {
   @Rule
@@ -120,18 +121,18 @@ public final class RetrofitTest {
     assertThat(example.toString()).isNotEmpty();
   }
 
-//  @Test
-//  public void interfaceWithExtendIsNotSupported() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    try {
-//      retrofit.create(Extending.class);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("API interfaces must not extend other interfaces.");
-//    }
-//  }
+  @Test
+  public void interfaceWithExtendIsNotSupported() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    try {
+      retrofit.create(Extending.class);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("API interfaces must not extend other interfaces.");
+    }
+  }
 //
 //  @Test
 //  public void cloneSharesStatefulInstances() {
