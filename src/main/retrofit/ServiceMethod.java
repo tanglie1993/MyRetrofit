@@ -33,6 +33,10 @@ public class ServiceMethod {
 
     public static Call generateOkHttpCall(Retrofit retrofit, Method method, Object[] args) {
         Type returnType = method.getGenericReturnType();
+        if(((Class) returnType).getName().equals("void")){
+            throw new IllegalArgumentException("Service methods cannot return void.\n    for method "
+                    + method.getDeclaringClass().getSimpleName() + "."+ method.getName());
+        }
         Type[] actualTypeArguments = ((ParameterizedTypeImpl) returnType).getActualTypeArguments();
         Type responseType = actualTypeArguments[0];
         if (responseType == Response.class || responseType == okhttp3.Response.class) {

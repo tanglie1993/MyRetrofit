@@ -193,38 +193,38 @@ public final class RetrofitTest {
               + "    for method CallMethod.badType1");
     }
   }
-//
-//  @Test
-//  public void responseTypeCannotBeOkHttpResponse() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    CallMethod service = retrofit.create(CallMethod.class);
-//    try {
-//      service.badType2();
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage(
-//          "'okhttp3.Response' is not a valid response body type. Did you mean ResponseBody?\n"
-//              + "    for method CallMethod.badType2");
-//    }
-//  }
-//
-//  @Test
-//  public void voidReturnTypeNotAllowed() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    VoidService service = retrofit.create(VoidService.class);
-//
-//    try {
-//      service.nope();
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessageStartingWith(
-//          "Service methods cannot return void.\n    for method VoidService.nope");
-//    }
-//  }
+
+  @Test
+  public void responseTypeCannotBeOkHttpResponse() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    CallMethod service = retrofit.create(CallMethod.class);
+    try {
+      service.badType2();
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage(
+          "'okhttp3.Response' is not a valid response body type. Did you mean ResponseBody?\n"
+              + "    for method CallMethod.badType2");
+    }
+  }
+
+  @Test
+  public void voidReturnTypeNotAllowed() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    VoidService service = retrofit.create(VoidService.class);
+
+    try {
+      service.nope();
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessageStartingWith(
+          "Service methods cannot return void.\n    for method VoidService.nope");
+    }
+  }
 //
 //  @Test
 //  public void validateEagerlyDisabledByDefault() {
