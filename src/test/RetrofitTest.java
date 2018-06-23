@@ -225,43 +225,43 @@ public final class RetrofitTest {
           "Service methods cannot return void.\n    for method VoidService.nope");
     }
   }
-//
-//  @Test
-//  public void validateEagerlyDisabledByDefault() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//
-//    // Should not throw exception about incorrect configuration of the VoidService
-//    retrofit.create(VoidService.class);
-//  }
-//
-//  @Test
-//  public void validateEagerlyDisabledByUser() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .validateEagerly(false)
-//        .build();
-//
-//    // Should not throw exception about incorrect configuration of the VoidService
-//    retrofit.create(VoidService.class);
-//  }
-//
-//  @Test
-//  public void validateEagerlyFailsAtCreation() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .validateEagerly(true)
-//        .build();
-//
-//    try {
-//      retrofit.create(VoidService.class);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessageStartingWith(
-//          "Service methods cannot return void.\n    for method VoidService.nope");
-//    }
-//  }
+
+  @Test
+  public void validateEagerlyDisabledByDefault() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+
+    // Should not throw exception about incorrect configuration of the VoidService
+    retrofit.create(VoidService.class);
+  }
+
+  @Test
+  public void validateEagerlyDisabledByUser() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .validateEagerly(false)
+        .build();
+
+    // Should not throw exception about incorrect configuration of the VoidService
+    retrofit.create(VoidService.class);
+  }
+
+  @Test
+  public void validateEagerlyFailsAtCreation() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .validateEagerly(true)
+        .build();
+
+    try {
+      retrofit.create(VoidService.class);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessageStartingWith(
+          "Service methods cannot return void.\n    for method VoidService.nope");
+    }
+  }
 //
 //  @Test
 //  public void callCallAdapterAddedByDefault() {

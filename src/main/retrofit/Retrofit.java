@@ -19,11 +19,13 @@ public class Retrofit {
 
      HttpUrl baseUrl;
     private List<Converter.Factory> factoryList;
+    private boolean validateEagerly;
 
-    public Retrofit(HttpUrl baseUrl, List<Converter.Factory> factoryList, OkHttpClient client) {
+    public Retrofit(HttpUrl baseUrl, List<Converter.Factory> factoryList, OkHttpClient client, boolean validateEagerly) {
         this.baseUrl = baseUrl;
         this.factoryList = factoryList;
         this.client = client;
+        this.validateEagerly = validateEagerly;
     }
 
     public <T> T create(final Class<T> service) {
@@ -32,6 +34,14 @@ public class Retrofit {
         }
         if (service.getInterfaces().length > 0) {
             throw new IllegalArgumentException("API interfaces must not extend other interfaces.");
+        }
+        if(validateEagerly){
+            for(Method method : service.getDeclaredMethods()){
+                if(method.getReturnType().getName().equals("void")){
+                    throw new IllegalArgumentException("Service methods cannot return void.\n    for method "
+                            + method.getDeclaringClass().getSimpleName() + "."+ method.getName());
+                }
+            }
         }
         return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[]{service},
                 new InvocationHandler() {
@@ -73,6 +83,7 @@ public class Retrofit {
         private HttpUrl baseUrl;
         private List<Converter.Factory> factoryList = new ArrayList<>();
         private OkHttpClient client = new OkHttpClient();
+        private boolean validateEagerly;
 
         public Builder() {
         }
@@ -94,7 +105,7 @@ public class Retrofit {
         }
 
         public Retrofit build() {
-            return new Retrofit(baseUrl, factoryList, client);
+            return new Retrofit(baseUrl, factoryList, client,validateEagerly);
         }
 
         public Builder client(OkHttpClient client) {
@@ -104,6 +115,11 @@ public class Retrofit {
 
         public List<Converter.Factory> converterFactories() {
             return factoryList;
+        }
+
+        public Builder validateEagerly(boolean validateEagerly) {
+            this.validateEagerly = validateEagerly;
+            return this;
         }
     }
 }
