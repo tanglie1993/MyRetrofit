@@ -1,5 +1,6 @@
 package main.retrofit;
 
+import com.sun.istack.internal.Nullable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
@@ -16,12 +17,21 @@ public interface Converter<F, T> {
 
     abstract class Factory {
 
-        public abstract Converter<ResponseBody, ?> responseBodyConverter(Type type,
-                                                                         Annotation[] annotations, Retrofit retrofit);
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type,
+                                                                         Annotation[] annotations, Retrofit retrofit){
+            return null;
+        }
 
-        public abstract Converter<?, RequestBody> requestBodyConverter(Type type,
+        public Converter<?, RequestBody> requestBodyConverter(Type type,
                                                                        Annotation[] parameterAnnotations, Annotation[] methodAnnotations,
-                                                                       Retrofit retrofit);
+                                                                       Retrofit retrofit){
+            return null;
+        }
+
+        public @Nullable Converter<?, String> stringConverter(Type type, Annotation[] annotations,
+                                             Retrofit retrofit) {
+            return null;
+        }
 
     }
 }

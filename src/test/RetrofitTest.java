@@ -24,6 +24,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.reflect.Type;
@@ -372,55 +373,55 @@ public final class RetrofitTest {
       assertThat(e).hasMessage("Unable to create call adapter");
     }
   }
-//
-//  @Test
-//  public void methodAnnotationsPassedToResponseBodyConverter() {
-//    final AtomicReference<Annotation[]> annotationsRef = new AtomicReference<>();
-//    class MyConverterFactory extends Converter.Factory {
-//      @Override
-//      public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
-//                                                              Retrofit retrofit) {
-//        annotationsRef.set(annotations);
-//        return new ToStringConverterFactory().responseBodyConverter(type, annotations, retrofit);
-//      }
-//    }
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .addConverterFactory(new MyConverterFactory())
-//        .build();
-//    Annotated annotated = retrofit.create(Annotated.class);
-//    annotated.method(); // Trigger internal setup.
-//
-//    Annotation[] annotations = annotationsRef.get();
-//    assertThat(annotations).hasAtLeastOneElementOfType(Annotated.Foo.class);
-//  }
-//
-//  @Test
-//  public void methodAndParameterAnnotationsPassedToRequestBodyConverter() {
-//    final AtomicReference<Annotation[]> parameterAnnotationsRef = new AtomicReference<>();
-//    final AtomicReference<Annotation[]> methodAnnotationsRef = new AtomicReference<>();
-//
-//    class MyConverterFactory extends Converter.Factory {
-//      @Override
-//      public Converter<?, RequestBody> requestBodyConverter(Type type,
-//                                                            Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
-//        parameterAnnotationsRef.set(parameterAnnotations);
-//        methodAnnotationsRef.set(methodAnnotations);
-//        return new ToStringConverterFactory().requestBodyConverter(type, parameterAnnotations,
-//            methodAnnotations, retrofit);
-//      }
-//    }
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .addConverterFactory(new MyConverterFactory())
-//        .build();
-//    Annotated annotated = retrofit.create(Annotated.class);
-//    annotated.bodyParameter(null); // Trigger internal setup.
-//
-//    assertThat(parameterAnnotationsRef.get()).hasAtLeastOneElementOfType(Annotated.Foo.class);
-//    assertThat(methodAnnotationsRef.get()).hasAtLeastOneElementOfType(POST.class);
-//  }
-//
+
+  @Test
+  public void methodAnnotationsPassedToResponseBodyConverter() {
+    final AtomicReference<Annotation[]> annotationsRef = new AtomicReference<>();
+    class MyConverterFactory extends Converter.Factory {
+      @Override
+      public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
+                                                              Retrofit retrofit) {
+        annotationsRef.set(annotations);
+        return new ToStringConverterFactory().responseBodyConverter(type, annotations, retrofit);
+      }
+    }
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .addConverterFactory(new MyConverterFactory())
+        .build();
+    Annotated annotated = retrofit.create(Annotated.class);
+    annotated.method(); // Trigger internal setup.
+
+    Annotation[] annotations = annotationsRef.get();
+    assertThat(annotations).hasAtLeastOneElementOfType(Annotated.Foo.class);
+  }
+
+  @Test
+  public void methodAndParameterAnnotationsPassedToRequestBodyConverter() {
+    final AtomicReference<Annotation[]> parameterAnnotationsRef = new AtomicReference<>();
+    final AtomicReference<Annotation[]> methodAnnotationsRef = new AtomicReference<>();
+
+    class MyConverterFactory extends Converter.Factory {
+      @Override
+      public Converter<?, RequestBody> requestBodyConverter(Type type,
+                                                            Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
+        parameterAnnotationsRef.set(parameterAnnotations);
+        methodAnnotationsRef.set(methodAnnotations);
+        return new ToStringConverterFactory().requestBodyConverter(type, parameterAnnotations,
+            methodAnnotations, retrofit);
+      }
+    }
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .addConverterFactory(new MyConverterFactory())
+        .build();
+    Annotated annotated = retrofit.create(Annotated.class);
+    annotated.bodyParameter(null); // Trigger internal setup.
+
+    assertThat(parameterAnnotationsRef.get()).hasAtLeastOneElementOfType(Annotated.Foo.class);
+    assertThat(methodAnnotationsRef.get()).hasAtLeastOneElementOfType(POST.class);
+  }
+
 //  @Test
 //  public void parameterAnnotationsPassedToStringConverter() {
 //    final AtomicReference<Annotation[]> annotationsRef = new AtomicReference<>();
