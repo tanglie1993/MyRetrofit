@@ -15,10 +15,7 @@
  */
 package test;
 
-import main.retrofit.Call;
-import main.retrofit.Converter;
-import main.retrofit.Response;
-import main.retrofit.Retrofit;
+import main.retrofit.*;
 import main.retrofit.okhttp.*;
 import okhttp3.HttpUrl;
 import okhttp3.RequestBody;
@@ -27,15 +24,20 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static main.retrofit.Utils.getRawType;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -262,23 +264,23 @@ public final class RetrofitTest {
           "Service methods cannot return void.\n    for method VoidService.nope");
     }
   }
-//
-//  @Test
-//  public void callCallAdapterAddedByDefault() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    CallMethod example = retrofit.create(CallMethod.class);
-//    assertThat(example.getResponseBody()).isNotNull();
-//  }
-//
+
+  @Test
+  public void callCallAdapterAddedByDefault() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    CallMethod example = retrofit.create(CallMethod.class);
+    assertThat(example.getResponseBody()).isNotNull();
+  }
+
 //  @Test
 //  public void callCallCustomAdapter() {
 //    final AtomicBoolean factoryCalled = new AtomicBoolean();
 //    final AtomicBoolean adapterCalled = new AtomicBoolean();
 //    class MyCallAdapterFactory extends CallAdapter.Factory {
 //      @Override public CallAdapter<?, ?> get(final Type returnType, Annotation[] annotations,
-//          Retrofit retrofit) {
+//                                             Retrofit retrofit) {
 //        factoryCalled.set(true);
 //        if (getRawType(returnType) != Call.class) {
 //          return null;
@@ -306,56 +308,56 @@ public final class RetrofitTest {
 //    assertThat(adapterCalled.get()).isTrue();
 //  }
 //
-//  @Test
-//  public void customCallAdapter() {
-//    class GreetingCallAdapterFactory extends CallAdapter.Factory {
-//      @Override public CallAdapter<Object, String> get(Type returnType, Annotation[] annotations,
-//          Retrofit retrofit) {
-//        if (getRawType(returnType) != String.class) {
-//          return null;
-//        }
-//        return new CallAdapter<Object, String>() {
-//          @Override public Type responseType() {
-//            return String.class;
-//          }
-//
-//          @Override public String adapt(Call<Object> call) {
-//            return "Hi!";
-//          }
-//        };
-//      }
-//    }
-//
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .addConverterFactory(new ToStringConverterFactory())
-//        .addCallAdapterFactory(new GreetingCallAdapterFactory())
-//        .build();
-//    StringService example = retrofit.create(StringService.class);
-//    assertThat(example.get()).isEqualTo("Hi!");
-//  }
-//
-//  @Test
-//  public void methodAnnotationsPassedToCallAdapter() {
-//    final AtomicReference<Annotation[]> annotationsRef = new AtomicReference<>();
-//    class MyCallAdapterFactory extends CallAdapter.Factory {
-//      @Override public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations,
-//          Retrofit retrofit) {
-//        annotationsRef.set(annotations);
-//        return null;
-//      }
-//    }
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .addConverterFactory(new ToStringConverterFactory())
-//        .addCallAdapterFactory(new MyCallAdapterFactory())
-//        .build();
-//    Annotated annotated = retrofit.create(Annotated.class);
-//    annotated.method(); // Trigger internal setup.
-//
-//    Annotation[] annotations = annotationsRef.get();
-//    assertThat(annotations).hasAtLeastOneElementOfType(Annotated.Foo.class);
-//  }
+  @Test
+  public void customCallAdapter() {
+    class GreetingCallAdapterFactory extends CallAdapter.Factory {
+      @Override public CallAdapter<Object, String> get(Type returnType, Annotation[] annotations,
+          Retrofit retrofit) {
+        if (getRawType(returnType) != String.class) {
+          return null;
+        }
+        return new CallAdapter<Object, String>() {
+          @Override public Type responseType() {
+            return String.class;
+          }
+
+          @Override public String adapt(Call<Object> call) {
+            return "Hi!";
+          }
+        };
+      }
+    }
+
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .addConverterFactory(new ToStringConverterFactory())
+        .addCallAdapterFactory(new GreetingCallAdapterFactory())
+        .build();
+    StringService example = retrofit.create(StringService.class);
+    assertThat(example.get()).isEqualTo("Hi!");
+  }
+
+  @Test
+  public void methodAnnotationsPassedToCallAdapter() {
+    final AtomicReference<Annotation[]> annotationsRef = new AtomicReference<>();
+    class MyCallAdapterFactory extends CallAdapter.Factory {
+      @Override public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations,
+          Retrofit retrofit) {
+        annotationsRef.set(annotations);
+        return null;
+      }
+    }
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .addConverterFactory(new ToStringConverterFactory())
+        .addCallAdapterFactory(new MyCallAdapterFactory())
+        .build();
+    Annotated annotated = retrofit.create(Annotated.class);
+    annotated.method(); // Trigger internal setup.
+
+    Annotation[] annotations = annotationsRef.get();
+    assertThat(annotations).hasAtLeastOneElementOfType(Annotated.Foo.class);
+  }
 //
 //  @Test
 //  public void customCallAdapterMissingThrows() {

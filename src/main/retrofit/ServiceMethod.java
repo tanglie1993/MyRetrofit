@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 /**
  * Created by pc on 2018/6/9.
  */
-public class ServiceMethod {
+public class ServiceMethod<R, T> {
 
     String method;
     String requestBody;
@@ -30,15 +30,21 @@ public class ServiceMethod {
     Annotation[][] parameterAnnotations;
     Annotation[] declaredAnnotations;
     Object[] args;
+    CallAdapter<R, T> callAdapter;
 
-    public static Call generateOkHttpCall(Retrofit retrofit, Method method, Object[] args) {
+    public static OkHttpCall generateOkHttpCall(Retrofit retrofit, Method method, Object[] args) {
         Type returnType = method.getGenericReturnType();
-        if(((Class) returnType).getName().equals("void")){
+        if(returnType instanceof Class && ((Class) returnType).getName().equals("void")){
             throw new IllegalArgumentException("Service methods cannot return void.\n    for method "
                     + method.getDeclaringClass().getSimpleName() + "."+ method.getName());
         }
-        Type[] actualTypeArguments = ((ParameterizedTypeImpl) returnType).getActualTypeArguments();
-        Type responseType = actualTypeArguments[0];
+        Type responseType;
+        if(returnType instanceof ParameterizedTypeImpl){
+            Type[] actualTypeArguments = ((ParameterizedTypeImpl) returnType).getActualTypeArguments();
+            responseType = actualTypeArguments[0];
+        }else{
+            responseType = returnType;
+        }
         if (responseType == Response.class || responseType == okhttp3.Response.class) {
             throw new IllegalArgumentException("'"
                     + responseType.getTypeName()
@@ -58,13 +64,14 @@ public class ServiceMethod {
         return null;
     }
 
-    private static Call generateGet(Retrofit retrofit, Method method, Object[] args) {
+    private static OkHttpCall generateGet(Retrofit retrofit, Method method, Object[] args) {
         ServiceMethod serviceMethod = new ServiceMethod();
         serviceMethod.parameterAnnotations = method.getParameterAnnotations();
         serviceMethod.declaredAnnotations = method.getDeclaredAnnotations();
         serviceMethod.client = retrofit.client;
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
         serviceMethod.args = args;
+        serviceMethod.callAdapter = retrofit.callAdapterFactory.get(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
         GET get = (GET) method.getDeclaredAnnotations()[0];
         serviceMethod.relativeUrl = get.value();
         serviceMethod.requestBodyConverter = (Converter<String, RequestBody>) retrofit.searchForRequestConverter(method.getGenericReturnType(),
@@ -75,7 +82,7 @@ public class ServiceMethod {
         return new OkHttpCall(serviceMethod);
     }
 
-    private static Call generatePost(Retrofit retrofit, Method method, Object[] args) {
+    private static OkHttpCall generatePost(Retrofit retrofit, Method method, Object[] args) {
         ServiceMethod serviceMethod = new ServiceMethod();
         serviceMethod.client = retrofit.client;
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
@@ -84,8 +91,9 @@ public class ServiceMethod {
         POST post = (POST) method.getDeclaredAnnotations()[0];
         serviceMethod.relativeUrl = post.value();
         serviceMethod.args = args;
+        serviceMethod.callAdapter = retrofit.callAdapterFactory.get(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
         serviceMethod.requestBody = "";
-        serviceMethod.requestBodyConverter = (Converter<String, RequestBody>) retrofit.searchForRequestConverter(method.getGenericReturnType(),
+        serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
                 method.getParameterAnnotations()[0],
                 method.getDeclaredAnnotations());
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
@@ -123,4 +131,10 @@ public class ServiceMethod {
         return client.newCall(requestBuilder.build());
     }
 
+    T adapt(Call<R> call) {
+        if(callAdapter == null){
+            return (T) call;
+        }
+        return callAdapter.adapt(call);
+    }
 }

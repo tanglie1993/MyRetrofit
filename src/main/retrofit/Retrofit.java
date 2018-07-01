@@ -15,17 +15,19 @@ import java.util.List;
  */
 public class Retrofit {
 
+    CallAdapter.Factory callAdapterFactory;
     OkHttpClient client = new OkHttpClient();
 
      HttpUrl baseUrl;
     private List<Converter.Factory> factoryList;
     private boolean validateEagerly;
 
-    public Retrofit(HttpUrl baseUrl, List<Converter.Factory> factoryList, OkHttpClient client, boolean validateEagerly) {
+    public Retrofit(HttpUrl baseUrl, List<Converter.Factory> factoryList, OkHttpClient client, boolean validateEagerly, CallAdapter.Factory callAdapterFactory) {
         this.baseUrl = baseUrl;
         this.factoryList = factoryList;
         this.client = client;
         this.validateEagerly = validateEagerly;
+        this.callAdapterFactory = callAdapterFactory;
     }
 
     public <T> T create(final Class<T> service) {
@@ -50,7 +52,8 @@ public class Retrofit {
                         if (method.getDeclaringClass() == Object.class) {
                             return method.invoke(this, args);
                         }
-                        return ServiceMethod.generateOkHttpCall(Retrofit.this, method, args);
+                        OkHttpCall okHttpCall = ServiceMethod.generateOkHttpCall(Retrofit.this, method, args);
+                        return okHttpCall.adapt();
                     }
                 });
     }
@@ -84,6 +87,7 @@ public class Retrofit {
         private List<Converter.Factory> factoryList = new ArrayList<>();
         private OkHttpClient client = new OkHttpClient();
         private boolean validateEagerly;
+        private CallAdapter.Factory callAdapterFactory;
 
         public Builder() {
         }
@@ -92,6 +96,7 @@ public class Retrofit {
             this.client = retrofit.client;
             this.baseUrl = retrofit.baseUrl;
             this.factoryList = retrofit.factoryList;
+            this.callAdapterFactory = retrofit.callAdapterFactory;
         }
 
         public Builder baseUrl(HttpUrl url) {
@@ -105,7 +110,10 @@ public class Retrofit {
         }
 
         public Retrofit build() {
-            return new Retrofit(baseUrl, factoryList, client,validateEagerly);
+            if(callAdapterFactory == null){
+                callAdapterFactory = CallAdapter.FACTORY_INSTANCE;
+            }
+            return new Retrofit(baseUrl, factoryList, client, validateEagerly, callAdapterFactory);
         }
 
         public Builder client(OkHttpClient client) {
@@ -119,6 +127,11 @@ public class Retrofit {
 
         public Builder validateEagerly(boolean validateEagerly) {
             this.validateEagerly = validateEagerly;
+            return this;
+        }
+
+        public Builder addCallAdapterFactory(CallAdapter.Factory callAdapterFactory) {
+            this.callAdapterFactory = callAdapterFactory;
             return this;
         }
     }

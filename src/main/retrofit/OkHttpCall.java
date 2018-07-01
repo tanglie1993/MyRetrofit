@@ -15,13 +15,14 @@ import java.io.IOException;
 /**
  * Created by pc on 2018/6/10.
  */
-public class OkHttpCall implements Call {
+public class OkHttpCall implements Call<Object> {
 
     private volatile boolean isExecuted = false;
     private volatile boolean isCancelled = false;
-    private ServiceMethod serviceMethod;
+    private ServiceMethod<Object, Call> serviceMethod;
     private volatile okhttp3.Call rawCall;
     private Throwable creationFailure;
+
 
     public OkHttpCall(ServiceMethod serviceMethod) {
         this.serviceMethod = serviceMethod;
@@ -208,6 +209,10 @@ public class OkHttpCall implements Call {
             exceptionCatchingResponseBody.source().readAll(buffer);
             return new Response<>(response, null,  ResponseBody.create(response.body().contentType(), response.body().contentLength(), buffer));
         }
+    }
+
+    public Object adapt() {
+        return serviceMethod.adapt(OkHttpCall.this);
     }
 
     static final class ExceptionCatchingResponseBody extends ResponseBody {

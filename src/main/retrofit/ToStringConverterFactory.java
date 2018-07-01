@@ -8,6 +8,7 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
@@ -17,6 +18,9 @@ public class ToStringConverterFactory extends Converter.Factory {
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type,
                                                             Annotation[] annotations, Retrofit retrofit) {
+        if(!(type instanceof ParameterizedType)){
+            return null;
+        }
         if(((ParameterizedTypeImpl) type).getActualTypeArguments().length > 0
                 && ((ParameterizedTypeImpl) type).getActualTypeArguments()[0].equals(String.class)){
             return (Converter<ResponseBody, String>) value -> {
@@ -33,6 +37,9 @@ public class ToStringConverterFactory extends Converter.Factory {
     public Converter<?, RequestBody> requestBodyConverter(Type type,
                                                           Annotation[] parameterAnnotations, Annotation[] methodAnnotations,
                                                           Retrofit retrofit) {
+        if(!(type instanceof ParameterizedType)){
+            return null;
+        }
         if(((ParameterizedTypeImpl) type).getActualTypeArguments().length > 0
                 && ((ParameterizedTypeImpl) type).getActualTypeArguments()[0].equals(String.class)){
             return (Converter<String, RequestBody>) value -> new RequestBody() {
