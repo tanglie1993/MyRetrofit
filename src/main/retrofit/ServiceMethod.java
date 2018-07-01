@@ -133,7 +133,7 @@ public class ServiceMethod<R, T> {
 
     T adapt(Call<R> call) {
         if(callAdapter == null){
-            return (T) call;
+            throw new IllegalArgumentException("Unable to create call adapter");
         }
         return callAdapter.adapt(call);
     }

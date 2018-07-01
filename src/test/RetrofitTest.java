@@ -358,26 +358,20 @@ public final class RetrofitTest {
     Annotation[] annotations = annotationsRef.get();
     assertThat(annotations).hasAtLeastOneElementOfType(Annotated.Foo.class);
   }
-//
-//  @Test
-//  public void customCallAdapterMissingThrows() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    FutureMethod example = retrofit.create(FutureMethod.class);
-//    try {
-//      example.method();
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage(""
-//          + "Unable to create call adapter for java.util.concurrent.Future<java.lang.String>\n"
-//          + "    for method FutureMethod.method");
-//      assertThat(e.getCause()).hasMessage(""
-//          + "Could not locate call adapter for java.util.concurrent.Future<java.lang.String>.\n"
-//          + "  Tried:\n"
-//          + "   * retrofit2.DefaultCallAdapterFactory");
-//    }
-//  }
+
+  @Test
+  public void customCallAdapterMissingThrows() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    FutureMethod example = retrofit.create(FutureMethod.class);
+    try {
+      example.method();
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("Unable to create call adapter");
+    }
+  }
 //
 //  @Test
 //  public void methodAnnotationsPassedToResponseBodyConverter() {

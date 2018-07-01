@@ -19,6 +19,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import static main.retrofit.Utils.getRawType;
+
 public interface CallAdapter<R, T> {
 
   Type responseType();
@@ -35,21 +37,21 @@ public interface CallAdapter<R, T> {
 
   class DefaultCallAdapterFactory extends Factory{
 
-    static CallAdapter callAdapter = new CallAdapter<Object, Object>() {
-      @Override
-      public Type responseType() {
+    @Override
+    public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
+      if (returnType != Call.class) {
         return null;
       }
 
-      @Override
-      public Object adapt(Call<Object> call) {
-        return call;
-      }
-    };
+      return new CallAdapter<Object, Call<?>>() {
+        @Override public Type responseType() {
+          return null;
+        }
 
-    @Override
-    public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
-      return callAdapter;
+        @Override public Call<Object> adapt(Call<Object> call) {
+          return call;
+        }
+      };
     }
   }
 }
