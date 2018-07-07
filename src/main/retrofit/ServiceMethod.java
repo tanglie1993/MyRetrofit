@@ -71,10 +71,10 @@ public class ServiceMethod<R, T> {
         serviceMethod.client = retrofit.client;
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
         serviceMethod.args = args;
-        serviceMethod.callAdapter = retrofit.callAdapterFactory.get(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
+        serviceMethod.callAdapter = retrofit.getCallAdapter(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
         GET get = (GET) method.getDeclaredAnnotations()[0];
         serviceMethod.relativeUrl = get.value();
-        serviceMethod.requestBodyConverter = (Converter<String, RequestBody>) retrofit.searchForRequestConverter(method.getGenericReturnType(),
+        serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
                 null, method.getDeclaredAnnotations());
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
                 method.getDeclaredAnnotations());
@@ -91,7 +91,7 @@ public class ServiceMethod<R, T> {
         POST post = (POST) method.getDeclaredAnnotations()[0];
         serviceMethod.relativeUrl = post.value();
         serviceMethod.args = args;
-        serviceMethod.callAdapter = retrofit.callAdapterFactory.get(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
+        serviceMethod.callAdapter = retrofit.getCallAdapter(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
         serviceMethod.requestBody = "";
         serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
                 method.getParameterAnnotations()[0],

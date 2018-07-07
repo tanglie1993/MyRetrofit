@@ -422,31 +422,31 @@ public final class RetrofitTest {
     assertThat(methodAnnotationsRef.get()).hasAtLeastOneElementOfType(POST.class);
   }
 
-//  @Test
-//  public void parameterAnnotationsPassedToStringConverter() {
-//    final AtomicReference<Annotation[]> annotationsRef = new AtomicReference<>();
-//    class MyConverterFactory extends Converter.Factory {
-//      @Override public Converter<?, String> stringConverter(Type type, Annotation[] annotations,
-//          Retrofit retrofit) {
-//        annotationsRef.set(annotations);
-//
-//        return new Converter<Object, String>() {
-//          @Override public String convert(Object value) throws IOException {
-//            return String.valueOf(value);
-//          }
-//        };
-//      }
-//    }
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .addConverterFactory(new MyConverterFactory())
-//        .build();
-//    Annotated annotated = retrofit.create(Annotated.class);
-//    annotated.queryParameter(null); // Trigger internal setup.
-//
-//    Annotation[] annotations = annotationsRef.get();
-//    assertThat(annotations).hasAtLeastOneElementOfType(Annotated.Foo.class);
-//  }
+  @Test
+  public void parameterAnnotationsPassedToStringConverter() {
+    final AtomicReference<Annotation[]> annotationsRef = new AtomicReference<>();
+    class MyConverterFactory extends Converter.Factory {
+      @Override public Converter<?, String> stringConverter(Type type, Annotation[] annotations,
+          Retrofit retrofit) {
+        annotationsRef.set(annotations);
+
+        return new Converter<Object, String>() {
+          @Override public String convert(Object value) throws IOException {
+            return String.valueOf(value);
+          }
+        };
+      }
+    }
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .addConverterFactory(new MyConverterFactory())
+        .build();
+    Annotated annotated = retrofit.create(Annotated.class);
+    annotated.queryParameter(null); // Trigger internal setup.
+
+    Annotation[] annotations = annotationsRef.get();
+    assertThat(annotations).hasAtLeastOneElementOfType(Annotated.Foo.class);
+  }
 //
 //  @Test
 //  public void stringConverterCalledForString() {

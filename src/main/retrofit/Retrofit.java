@@ -15,19 +15,19 @@ import java.util.List;
  */
 public class Retrofit {
 
-    CallAdapter.Factory callAdapterFactory;
+    List<CallAdapter.Factory> callAdapterFactoryList;
     OkHttpClient client = new OkHttpClient();
 
      HttpUrl baseUrl;
     private List<Converter.Factory> factoryList;
     private boolean validateEagerly;
 
-    public Retrofit(HttpUrl baseUrl, List<Converter.Factory> factoryList, OkHttpClient client, boolean validateEagerly, CallAdapter.Factory callAdapterFactory) {
+    public Retrofit(HttpUrl baseUrl, List<Converter.Factory> factoryList, OkHttpClient client, boolean validateEagerly, List<CallAdapter.Factory> callAdapterFactoryList) {
         this.baseUrl = baseUrl;
         this.factoryList = factoryList;
         this.client = client;
         this.validateEagerly = validateEagerly;
-        this.callAdapterFactory = callAdapterFactory;
+        this.callAdapterFactoryList = callAdapterFactoryList;
     }
 
     public <T> T create(final Class<T> service) {
@@ -81,22 +81,35 @@ public class Retrofit {
         return new Builder(this);
     }
 
+    public CallAdapter getCallAdapter(Class<?> returnType, Annotation[] declaredAnnotations, Retrofit retrofit) {
+        for(CallAdapter.Factory factory : callAdapterFactoryList){
+            CallAdapter adapter = factory.get(returnType, declaredAnnotations, retrofit);
+            if(adapter != null){
+                return adapter;
+            }
+        }
+        return null;
+    }
+
     public static class Builder {
 
         private HttpUrl baseUrl;
         private List<Converter.Factory> factoryList = new ArrayList<>();
         private OkHttpClient client = new OkHttpClient();
         private boolean validateEagerly;
-        private CallAdapter.Factory callAdapterFactory;
+        private List<CallAdapter.Factory> callAdapterFactoryList;
 
         public Builder() {
+            this.callAdapterFactoryList = new ArrayList<>();
+            callAdapterFactoryList.add(CallAdapter.FACTORY_INSTANCE);
         }
 
         public Builder(Retrofit retrofit) {
             this.client = retrofit.client;
             this.baseUrl = retrofit.baseUrl;
             this.factoryList = retrofit.factoryList;
-            this.callAdapterFactory = retrofit.callAdapterFactory;
+            this.callAdapterFactoryList = retrofit.callAdapterFactoryList;
+            callAdapterFactoryList.add(CallAdapter.FACTORY_INSTANCE);
         }
 
         public Builder baseUrl(HttpUrl url) {
@@ -110,10 +123,7 @@ public class Retrofit {
         }
 
         public Retrofit build() {
-            if(callAdapterFactory == null){
-                callAdapterFactory = CallAdapter.FACTORY_INSTANCE;
-            }
-            return new Retrofit(baseUrl, factoryList, client, validateEagerly, callAdapterFactory);
+            return new Retrofit(baseUrl, factoryList, client, validateEagerly, callAdapterFactoryList);
         }
 
         public Builder client(OkHttpClient client) {
@@ -131,7 +141,7 @@ public class Retrofit {
         }
 
         public Builder addCallAdapterFactory(CallAdapter.Factory callAdapterFactory) {
-            this.callAdapterFactory = callAdapterFactory;
+            this.callAdapterFactoryList.add(callAdapterFactory);
             return this;
         }
     }
