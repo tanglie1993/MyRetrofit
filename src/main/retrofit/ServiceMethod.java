@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,17 +22,18 @@ import java.util.regex.Pattern;
  */
 public class ServiceMethod<R, T> {
 
+    private static Map<Method, ServiceMethod> cache = new HashMap<>();
+
     String method;
     String requestBody;
     String relativeUrl;
     String baseUrl;
     Converter<String, RequestBody> requestBodyConverter;
     Converter<ResponseBody, ?> responseBodyConverter;
-    OkHttpClient client;
     Annotation[][] parameterAnnotations;
     Annotation[] declaredAnnotations;
-    Object[] args;
     CallAdapter<R, T> callAdapter;
+    OkHttpClient client;
 
     public static OkHttpCall generateOkHttpCall(Retrofit retrofit, Method method, Object[] args) {
         Type returnType = method.getGenericReturnType();
@@ -54,6 +57,9 @@ public class ServiceMethod<R, T> {
                     + "."
                     + method.getName());
         }
+        if(cache.containsKey(method)){
+            return new OkHttpCall(cache.get(method), args);
+        }
         if(method.getDeclaredAnnotations().length > 0){
             if(method.getDeclaredAnnotations()[0] instanceof GET){
                 return generateGet(retrofit, method, args);
@@ -68,9 +74,7 @@ public class ServiceMethod<R, T> {
         ServiceMethod serviceMethod = new ServiceMethod();
         serviceMethod.parameterAnnotations = method.getParameterAnnotations();
         serviceMethod.declaredAnnotations = method.getDeclaredAnnotations();
-        serviceMethod.client = retrofit.client;
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
-        serviceMethod.args = args;
         serviceMethod.callAdapter = retrofit.getCallAdapter(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
         GET get = (GET) method.getDeclaredAnnotations()[0];
         serviceMethod.relativeUrl = get.value();
@@ -79,18 +83,19 @@ public class ServiceMethod<R, T> {
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
                 method.getDeclaredAnnotations());
         serviceMethod.method ="GET";
-        return new OkHttpCall(serviceMethod);
+        serviceMethod.client = retrofit.client;
+        OkHttpCall result = new OkHttpCall(serviceMethod, args);
+//        cache.put(method, serviceMethod);
+        return result;
     }
 
     private static OkHttpCall generatePost(Retrofit retrofit, Method method, Object[] args) {
         ServiceMethod serviceMethod = new ServiceMethod();
-        serviceMethod.client = retrofit.client;
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
         serviceMethod.parameterAnnotations = method.getParameterAnnotations();
         serviceMethod.declaredAnnotations = method.getDeclaredAnnotations();
         POST post = (POST) method.getDeclaredAnnotations()[0];
         serviceMethod.relativeUrl = post.value();
-        serviceMethod.args = args;
         serviceMethod.callAdapter = retrofit.getCallAdapter(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
         serviceMethod.requestBody = "";
         serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
@@ -99,10 +104,13 @@ public class ServiceMethod<R, T> {
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
                 method.getDeclaredAnnotations());
         serviceMethod.method = "POST";
-        return new OkHttpCall(serviceMethod);
+        serviceMethod.client = retrofit.client;
+        OkHttpCall result = new OkHttpCall(serviceMethod, args);
+//        cache.put(method, serviceMethod);
+        return result;
     }
 
-    okhttp3.Call toCall() throws IOException {
+    okhttp3.Call toCall(Object[] args) throws IOException {
         RequestBuilder requestBuilder = new RequestBuilder(method, baseUrl, relativeUrl);
         if(requestBody != null){
             requestBuilder.setBody(requestBodyConverter.convert(requestBody));
@@ -121,7 +129,6 @@ public class ServiceMethod<R, T> {
                         Pattern r = Pattern.compile(pattern);
                         Matcher m = r.matcher(relativeUrl);
                         relativeUrl = m.replaceAll(args[paramIndex].toString());
-
                         break outer;
                     }
                 }

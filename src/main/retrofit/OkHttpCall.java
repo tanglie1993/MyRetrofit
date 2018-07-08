@@ -1,10 +1,7 @@
 package main.retrofit;
 
 import com.google.caliper.model.Run;
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.ForwardingSource;
@@ -17,19 +14,20 @@ import java.io.IOException;
  */
 public class OkHttpCall implements Call<Object> {
 
+    private Object[] args;
     private volatile boolean isExecuted = false;
     private volatile boolean isCancelled = false;
     private ServiceMethod<Object, Call> serviceMethod;
     private volatile okhttp3.Call rawCall;
     private Throwable creationFailure;
 
-
-    public OkHttpCall(ServiceMethod serviceMethod) {
-        this.serviceMethod = serviceMethod;
-    }
-
     public OkHttpCall(OkHttpCall okHttpCall) {
         this.serviceMethod = okHttpCall.serviceMethod;
+    }
+
+    public OkHttpCall(ServiceMethod serviceMethod, Object[] args) {
+        this.serviceMethod = serviceMethod;
+        this.args = args;
     }
 
     @Override
@@ -54,7 +52,7 @@ public class OkHttpCall implements Call<Object> {
         isExecuted = true;
         try{
             if(rawCall == null){
-                rawCall = serviceMethod.toCall();
+                rawCall = serviceMethod.toCall(args);
             }
         }catch (Throwable e){
             throwIfFatal(e);
@@ -92,7 +90,7 @@ public class OkHttpCall implements Call<Object> {
         }
         try {
             if(rawCall == null && creationFailure == null){
-                rawCall = serviceMethod.toCall();
+                rawCall = serviceMethod.toCall(args);
             }
         } catch (Throwable e) {
             throwIfFatal(e);
@@ -164,7 +162,7 @@ public class OkHttpCall implements Call<Object> {
         if(rawCall == null){
             try {
                 if(rawCall == null && creationFailure == null){
-                    rawCall = serviceMethod.toCall();
+                    rawCall = serviceMethod.toCall(args);
                 }
             } catch (Throwable e) {
                 throwIfFatal(e);
