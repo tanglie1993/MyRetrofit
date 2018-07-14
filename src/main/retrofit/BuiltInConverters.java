@@ -26,9 +26,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-final class BuiltInConverter extends Converter.Factory {
+public final class BuiltInConverters extends Converter.Factory {
 
-  static final Converter.Factory INSTANCE = new BuiltInConverter();
+  static final Converter.Factory INSTANCE = new BuiltInConverters();
 
   @Override
   public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
