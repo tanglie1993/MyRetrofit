@@ -860,79 +860,79 @@ public final class RetrofitTest {
     }
   }
 
-  @Test
-  public void converterFactoryDefault() {
-    Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl("http://example.com/")
-        .build();
-    List<Converter.Factory> converterFactories = retrofit.converterFactories();
-    assertThat(converterFactories).hasSize(1);
-    assertThat(converterFactories.get(0)).isInstanceOf(BuiltInConverters.class);
-  }
+//  @Test
+//  public void converterFactoryDefault() {
+//    Retrofit retrofit = new Retrofit.Builder()
+//        .baseUrl("http://example.com/")
+//        .build();
+//    List<Converter.Factory> converterFactories = retrofit.converterFactories();
+//    assertThat(converterFactories).hasSize(1);
+//    assertThat(converterFactories.get(0)).isInstanceOf(BuiltInConverters.class);
+//  }
 
-  @Test
-  public void builtInConvertersFirstInClone() {
-    Converter<ResponseBody, Void> converter = mock(Converter.class);
-    Converter.Factory factory = mock(Converter.Factory.class);
-    Annotation[] annotations = new Annotation[0];
-
-    Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl("http://example.com/")
-        .addConverterFactory(factory)
-        .build();
-
-    doReturn(converter).when(factory).responseBodyConverter(Void.class, annotations, retrofit);
+//  @Test
+//  public void builtInConvertersFirstInClone() {
+//    Converter<ResponseBody, Void> converter = mock(Converter.class);
+//    Converter.Factory factory = mock(Converter.Factory.class);
+//    Annotation[] annotations = new Annotation[0];
 //
-    retrofit.newBuilder().build().responseBodyConverter(Void.class, annotations);
-
-    verifyZeroInteractions(factory);
-  }
-
-  @Test
-  public void requestConverterFactoryQueried() {
-    Type type = String.class;
-    Annotation[] parameterAnnotations = new Annotation[0];
-    Annotation[] methodAnnotations = new Annotation[1];
-
-    Converter<?, RequestBody> expectedAdapter = mock(Converter.class);
-    Converter.Factory factory = mock(Converter.Factory.class);
-
-    Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl("http://example.com/")
-        .addConverterFactory(factory)
-        .build();
-
-    doReturn(expectedAdapter).when(factory).requestBodyConverter(type, parameterAnnotations,
-        methodAnnotations, retrofit);
-
-    Converter<?, RequestBody> actualAdapter = retrofit.requestBodyConverter(type, parameterAnnotations, methodAnnotations);
-    assertThat(actualAdapter).isSameAs(expectedAdapter);
-
-    verify(factory).requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit);
-    verifyNoMoreInteractions(factory);
-  }
-
-  @Test
-  public void requestConverterFactoryNoMatchThrows() {
-    Type type = String.class;
-    Annotation[] annotations = new Annotation[0];
-
-    NonMatchingConverterFactory nonMatchingFactory = new NonMatchingConverterFactory();
-
-    Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl("http://example.com/")
-        .addConverterFactory(nonMatchingFactory)
-        .build();
-
-    try {
-      retrofit.requestBodyConverter(type, annotations, annotations);
-      fail();
-    } catch (IllegalArgumentException e) {
-      assertThat(e).hasMessage("Could not locate RequestBody converter for class java.lang.String");
-    }
-
-    assertThat(nonMatchingFactory.called).isTrue();
-  }
+//    Retrofit retrofit = new Retrofit.Builder()
+//        .baseUrl("http://example.com/")
+//        .addConverterFactory(factory)
+//        .build();
+//
+//    doReturn(converter).when(factory).responseBodyConverter(Void.class, annotations, retrofit);
+////
+//    retrofit.newBuilder().build().responseBodyConverter(Void.class, annotations);
+//
+//    verifyZeroInteractions(factory);
+//  }
+//
+//  @Test
+//  public void requestConverterFactoryQueried() {
+//    Type type = String.class;
+//    Annotation[] parameterAnnotations = new Annotation[0];
+//    Annotation[] methodAnnotations = new Annotation[1];
+//
+//    Converter<?, RequestBody> expectedAdapter = mock(Converter.class);
+//    Converter.Factory factory = mock(Converter.Factory.class);
+//
+//    Retrofit retrofit = new Retrofit.Builder()
+//        .baseUrl("http://example.com/")
+//        .addConverterFactory(factory)
+//        .build();
+//
+//    doReturn(expectedAdapter).when(factory).requestBodyConverter(type, parameterAnnotations,
+//        methodAnnotations, retrofit);
+//
+//    Converter<?, RequestBody> actualAdapter = retrofit.requestBodyConverter(type, parameterAnnotations, methodAnnotations);
+//    assertThat(actualAdapter).isSameAs(expectedAdapter);
+//
+//    verify(factory).requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit);
+//    verifyNoMoreInteractions(factory);
+//  }
+//
+//  @Test
+//  public void requestConverterFactoryNoMatchThrows() {
+//    Type type = String.class;
+//    Annotation[] annotations = new Annotation[0];
+//
+//    NonMatchingConverterFactory nonMatchingFactory = new NonMatchingConverterFactory();
+//
+//    Retrofit retrofit = new Retrofit.Builder()
+//        .baseUrl("http://example.com/")
+//        .addConverterFactory(nonMatchingFactory)
+//        .build();
+//
+//    try {
+//      retrofit.requestBodyConverter(type, annotations, annotations);
+//      fail();
+//    } catch (IllegalArgumentException e) {
+//      assertThat(e).hasMessage("Could not locate RequestBody converter for class java.lang.String");
+//    }
+//
+//    assertThat(nonMatchingFactory.called).isTrue();
+//  }
 //
 //  @Test
 //  public void requestConverterFactorySkippedNoMatchThrows() {

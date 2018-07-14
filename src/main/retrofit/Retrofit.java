@@ -95,36 +95,6 @@ public class Retrofit {
         return baseUrl;
     }
 
-    public List<Converter.Factory> converterFactories() {
-        return factoryList;
-    }
-
-    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations) {
-        int start = 1;
-        for (int i = start, count = factoryList.size(); i < count; i++) {
-            Converter<ResponseBody, ?> converter = factoryList.get(i).responseBodyConverter(type, annotations, this);
-            if (converter != null) {
-                return converter;
-            }
-        }
-        StringBuilder builder = new StringBuilder("Could not locate RequestBody converter for ");
-        builder.append(type);
-        String string = builder.toString();
-        throw new IllegalArgumentException(string);
-    }
-
-    public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations) {
-        int start = 1;
-        for (int i = start, count = factoryList.size(); i < count; i++) {
-            Converter<?, RequestBody> converter = factoryList.get(i).requestBodyConverter(type, parameterAnnotations, methodAnnotations, this);
-            if (converter != null) {
-                return converter;
-            }
-        }
-        String string = "Could not locate RequestBody converter for " + type;
-        throw new IllegalArgumentException(string);
-    }
-
     public static class Builder {
 
         private HttpUrl baseUrl;
@@ -181,12 +151,11 @@ public class Retrofit {
             if(baseUrl == null){
                 throw new IllegalStateException("Base URL required.");
             }
-            factoryList.add(0,  new BuiltInConverters());
             return new Retrofit(baseUrl, factoryList, client, validateEagerly, callAdapterFactoryList);
         }
 
         public Builder client(OkHttpClient client) {
-            if(client ==  null){
+            if(client == null){
                 throw new NullPointerException("client == null");
             }
             this.client = client;
