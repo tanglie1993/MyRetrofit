@@ -18,6 +18,7 @@ package test;
 import main.retrofit.*;
 import main.retrofit.okhttp.*;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.MockResponse;
@@ -557,39 +558,39 @@ public final class RetrofitTest {
     Response<Void> response = example.getVoid().execute();
     assertThat(response.body()).isNull();
   }
-//
-//  @Test
-//  public void voidResponsesArePooled() throws Exception {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    CallMethod example = retrofit.create(CallMethod.class);
-//
-//    server.enqueue(new MockResponse().setBody("abc"));
-//    server.enqueue(new MockResponse().setBody("def"));
-//
-//    example.getVoid().execute();
-//    example.getVoid().execute();
-//
-//    assertThat(server.takeRequest().getSequenceNumber()).isEqualTo(0);
-//    assertThat(server.takeRequest().getSequenceNumber()).isEqualTo(1);
-//  }
-//
-//  @Test
-//  public void responseBodyIncomingAllowed() throws IOException, InterruptedException {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    CallMethod example = retrofit.create(CallMethod.class);
-//
-//    server.enqueue(new MockResponse().setBody("Hi"));
-//
-//    RequestBody body = RequestBody.create(MediaType.parse("text/plain"), "Hey");
-//    Response<ResponseBody> response = example.postRequestBody(body).execute();
-//    assertThat(response.body().string()).isEqualTo("Hi");
-//
-//    assertThat(server.takeRequest().getBody().readUtf8()).isEqualTo("Hey");
-//  }
+
+  @Test
+  public void voidResponsesArePooled() throws Exception {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    CallMethod example = retrofit.create(CallMethod.class);
+
+    server.enqueue(new MockResponse().setBody("abc"));
+    server.enqueue(new MockResponse().setBody("def"));
+
+    example.getVoid().execute();
+    example.getVoid().execute();
+
+    assertThat(server.takeRequest().getSequenceNumber()).isEqualTo(0);
+    assertThat(server.takeRequest().getSequenceNumber()).isEqualTo(1);
+  }
+
+  @Test
+  public void responseBodyIncomingAllowed() throws IOException, InterruptedException {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    CallMethod example = retrofit.create(CallMethod.class);
+
+    server.enqueue(new MockResponse().setBody("Hi"));
+
+    RequestBody body = RequestBody.create(MediaType.parse("text/plain"), "Hey");
+    Response<ResponseBody> response = example.postRequestBody(body).execute();
+    assertThat(response.body().string()).isEqualTo("Hi");
+
+    assertThat(server.takeRequest().getBody().readUtf8()).isEqualTo("Hey");
+  }
 //
 //  @Test
 //  public void unresolvableResponseTypeThrows() {

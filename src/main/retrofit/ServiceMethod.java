@@ -92,13 +92,17 @@ public class ServiceMethod<R, T> {
 
     okhttp3.Call toCall(Object[] args) throws IOException {
         RequestBuilder requestBuilder = new RequestBuilder(method, baseUrl, relativeUrl);
-        String requestBody = null;
+        RequestBody requestBody = null;
         int paramIndex = 0;
         outer:  for(Annotation[] parameterAnnotation : parameterAnnotations){
             if(parameterAnnotation.length > 0){
                 for(Annotation annotation : parameterAnnotation){
                     if(annotation instanceof Body){
-                        requestBody = (String) args[paramIndex];
+                        if(args[paramIndex] instanceof String){
+                            requestBody = requestBodyConverter.convert((String) args[paramIndex]);
+                        }else if(args[paramIndex] instanceof RequestBody){
+                            requestBody = (RequestBody) args[paramIndex];
+                        }
                     }
                     if(annotation instanceof Path){
                         String pattern = "\\{" + ((Path) annotation).value() + "\\}";
@@ -111,7 +115,7 @@ public class ServiceMethod<R, T> {
             paramIndex++;
         }
         if(requestBody != null){
-            requestBuilder.setBody(requestBodyConverter.convert(requestBody));
+            requestBuilder.setBody(requestBody);
         }else if(method.equals("POST")){
             requestBuilder.setBody(new RequestBody() {
                 @Override
