@@ -43,6 +43,9 @@ public class ServiceMethod<R, T> {
             throw new IllegalArgumentException("Service methods cannot return void.\n    for method "
                     + method.getDeclaringClass().getSimpleName() + "."+ method.getName());
         }
+        if (Utils.hasUnresolvableType(returnType)) {
+            throw new IllegalArgumentException("Method return type must not include a type variable or wildcard");
+        }
         Type responseType;
         if(returnType instanceof ParameterizedTypeImpl){
             Type[] actualTypeArguments = ((ParameterizedTypeImpl) returnType).getActualTypeArguments();

@@ -54,4 +54,31 @@ public class Utils {
         }
         return paramType;
     }
+
+    static boolean hasUnresolvableType(@Nullable Type type) {
+        if (type instanceof Class<?>) {
+            return false;
+        }
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            for (Type typeArgument : parameterizedType.getActualTypeArguments()) {
+                if (hasUnresolvableType(typeArgument)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (type instanceof GenericArrayType) {
+            return hasUnresolvableType(((GenericArrayType) type).getGenericComponentType());
+        }
+        if (type instanceof TypeVariable) {
+            return true;
+        }
+        if (type instanceof WildcardType) {
+            return true;
+        }
+        String className = type == null ? "null" : type.getClass().getName();
+        throw new IllegalArgumentException("Expected a Class, ParameterizedType, or "
+                + "GenericArrayType, but <" + type + "> is of type " + className);
+    }
 }
