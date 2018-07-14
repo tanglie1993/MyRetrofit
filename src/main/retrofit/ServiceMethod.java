@@ -65,8 +65,13 @@ public class ServiceMethod<R, T> {
         serviceMethod.declaredAnnotations = method.getDeclaredAnnotations();
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
         serviceMethod.callAdapter = retrofit.getCallAdapter(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
-        serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
-                method.getParameterAnnotations()[0], method.getDeclaredAnnotations());
+        if(method.getParameterAnnotations().length == 0){
+            serviceMethod.requestBodyConverter = new ToStringConverterFactory().requestBodyConverter(method.getReturnType(),
+                    null, method.getDeclaredAnnotations(), retrofit);
+        }else{
+            serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
+                    method.getParameterAnnotations()[0], method.getDeclaredAnnotations());
+        }
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
                 method.getDeclaredAnnotations());
         if(method.getDeclaredAnnotations()[0] instanceof GET){

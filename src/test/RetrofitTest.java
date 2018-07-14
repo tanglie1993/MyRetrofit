@@ -20,6 +20,7 @@ import main.retrofit.okhttp.*;
 import okhttp3.HttpUrl;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Rule;
 import org.junit.Test;
@@ -531,18 +532,18 @@ public final class RetrofitTest {
 //    }
 //  }
 //
-//  @Test
-//  public void requestBodyOutgoingAllowed() throws IOException {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    CallMethod example = retrofit.create(CallMethod.class);
-//
-//    server.enqueue(new MockResponse().setBody("Hi"));
-//
-//    Response<ResponseBody> response = example.getResponseBody().execute();
-//    assertThat(response.body().string()).isEqualTo("Hi");
-//  }
+  @Test
+  public void requestBodyOutgoingAllowed() throws IOException {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    CallMethod example = retrofit.create(CallMethod.class);
+
+    server.enqueue(new MockResponse().setBody("Hi"));
+
+    Response<ResponseBody> response = example.getResponseBody().execute();
+    assertThat(response.body().string()).isEqualTo("Hi");
+  }
 //
 //  @Test
 //  public void voidOutgoingAllowed() throws IOException {
