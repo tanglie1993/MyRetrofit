@@ -631,53 +631,46 @@ public final class RetrofitTest {
       assertThat(e).hasMessage("Method return type must not include a type variable or wildcard");
     }
   }
-//
-//  @Test
-//  public void unresolvableParameterTypeThrows() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .addConverterFactory(new ToStringConverterFactory())
-//        .build();
-//    UnresolvableParameterType example = retrofit.create(UnresolvableParameterType.class);
-//
-//    try {
-//      example.typeVariable(null);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard: "
-//          + "T (parameter #1)\n    for method UnresolvableParameterType.typeVariable");
-//    }
-//    try {
-//      example.typeVariableUpperBound(null);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard: "
-//          + "T (parameter #1)\n    for method UnresolvableParameterType.typeVariableUpperBound");
-//    }
-//    try {
-//      example.crazy(null);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard: "
-//          + "java.util.List<java.util.Map<java.lang.String, java.util.Set<T[]>>> (parameter #1)\n"
-//          + "    for method UnresolvableParameterType.crazy");
-//    }
-//    try {
-//      example.wildcard(null);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard: "
-//          + "java.util.List<?> (parameter #1)\n    for method UnresolvableParameterType.wildcard");
-//    }
-//    try {
-//      example.wildcardUpperBound(null);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard: "
-//          + "java.util.List<? extends okhttp3.RequestBody> (parameter #1)\n"
-//          + "    for method UnresolvableParameterType.wildcardUpperBound");
-//    }
-//  }
+
+  @Test
+  public void unresolvableParameterTypeThrows() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .addConverterFactory(new ToStringConverterFactory())
+        .build();
+    UnresolvableParameterType example = retrofit.create(UnresolvableParameterType.class);
+
+    try {
+      example.typeVariable(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard");
+    }
+    try {
+      example.typeVariableUpperBound(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard");
+    }
+    try {
+      example.crazy(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard");
+    }
+    try {
+      example.wildcard(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard");
+    }
+    try {
+      example.wildcardUpperBound(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard");
+    }
+  }
 //
 //  @Test
 //  public void baseUrlRequired() {

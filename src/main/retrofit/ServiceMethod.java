@@ -46,6 +46,11 @@ public class ServiceMethod<R, T> {
         if (Utils.hasUnresolvableType(returnType)) {
             throw new IllegalArgumentException("Method return type must not include a type variable or wildcard");
         }
+        for(Type type :  method.getGenericParameterTypes()){
+            if (Utils.hasUnresolvableType(type)) {
+                throw new IllegalArgumentException("Parameter type must not include a type variable or wildcard");
+            }
+        }
         Type responseType;
         if(returnType instanceof ParameterizedTypeImpl){
             Type[] actualTypeArguments = ((ParameterizedTypeImpl) returnType).getActualTypeArguments();
