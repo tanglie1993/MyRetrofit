@@ -29,8 +29,15 @@ public interface CallAdapter<R, T> {
 
   abstract class Factory {
 
-    public abstract CallAdapter<?, ?> get(Type returnType, Annotation[] annotations,
-                          Retrofit retrofit);
+    public abstract CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit);
+
+    public static Type getParameterUpperBound(int index, ParameterizedType type) {
+      return Utils.getParameterUpperBound(index, type);
+    }
+
+    public static Class<?> getRawType(Type type) {
+      return Utils.getRawType(type);
+    }
   }
 
   static DefaultCallAdapterFactory FACTORY_INSTANCE = new DefaultCallAdapterFactory();
