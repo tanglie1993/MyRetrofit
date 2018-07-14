@@ -123,6 +123,9 @@ public class Retrofit {
         }
 
         public Retrofit build() {
+            if(baseUrl == null){
+                throw new IllegalStateException("Base URL required.");
+            }
             return new Retrofit(baseUrl, factoryList, client, validateEagerly, callAdapterFactoryList);
         }
 

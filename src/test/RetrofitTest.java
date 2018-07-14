@@ -671,16 +671,16 @@ public final class RetrofitTest {
       assertThat(e).hasMessage("Parameter type must not include a type variable or wildcard");
     }
   }
-//
-//  @Test
-//  public void baseUrlRequired() {
-//    try {
-//      new Retrofit.Builder().build();
-//      fail();
-//    } catch (IllegalStateException e) {
-//      assertThat(e).hasMessage("Base URL required.");
-//    }
-//  }
+
+  @Test
+  public void baseUrlRequired() {
+    try {
+      new Retrofit.Builder().build();
+      fail();
+    } catch (IllegalStateException e) {
+      assertThat(e).hasMessage("Base URL required.");
+    }
+  }
 //
 //  @Test
 //  public void baseUrlNullThrows() {
