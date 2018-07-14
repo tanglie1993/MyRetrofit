@@ -545,18 +545,18 @@ public final class RetrofitTest {
     assertThat(response.body().string()).isEqualTo("Hi");
   }
 //
-//  @Test
-//  public void voidOutgoingAllowed() throws IOException {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .build();
-//    CallMethod example = retrofit.create(CallMethod.class);
-//
-//    server.enqueue(new MockResponse().setBody("Hi"));
-//
-//    Response<Void> response = example.getVoid().execute();
-//    assertThat(response.body()).isNull();
-//  }
+  @Test
+  public void voidOutgoingAllowed() throws IOException {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .build();
+    CallMethod example = retrofit.create(CallMethod.class);
+
+    server.enqueue(new MockResponse().setBody("Hi"));
+
+    Response<Void> response = example.getVoid().execute();
+    assertThat(response.body()).isNull();
+  }
 //
 //  @Test
 //  public void voidResponsesArePooled() throws Exception {

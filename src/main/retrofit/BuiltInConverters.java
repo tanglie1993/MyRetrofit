@@ -23,6 +23,7 @@ import okio.Buffer;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 final class BuiltInConverter extends Converter.Factory {
@@ -36,6 +37,9 @@ final class BuiltInConverter extends Converter.Factory {
       if(annotation instanceof Streaming){
         return StreamingResponseBodyConverter.INSTANCE;
       }
+    }
+    if (type instanceof ParameterizedType && Utils.getParameterUpperBound(0, (ParameterizedType) type) == Void.class) {
+      return VoidResponseBodyConverter.INSTANCE;
     }
     return ResponseBodyConverter.INSTANCE;
   }
@@ -71,6 +75,15 @@ final class BuiltInConverter extends Converter.Factory {
     @Override
     public ResponseBody convert(ResponseBody value) throws IOException {
       return value;
+    }
+  }
+
+  static final class VoidResponseBodyConverter implements Converter<ResponseBody, Void> {
+    static final VoidResponseBodyConverter INSTANCE = new VoidResponseBodyConverter();
+
+    @Override public Void convert(ResponseBody value) {
+      value.close();
+      return null;
     }
   }
 }

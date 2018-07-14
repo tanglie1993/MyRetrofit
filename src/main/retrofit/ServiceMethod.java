@@ -1,5 +1,6 @@
 package main.retrofit;
 
+import com.google.caliper.Param;
 import com.google.inject.internal.MoreTypes;
 import main.retrofit.okhttp.Body;
 import main.retrofit.okhttp.GET;
@@ -12,6 +13,7 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +75,8 @@ public class ServiceMethod<R, T> {
                     method.getParameterAnnotations()[0], method.getDeclaredAnnotations());
         }
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
-                method.getDeclaredAnnotations());
+        method.getDeclaredAnnotations());
+
         if(method.getDeclaredAnnotations()[0] instanceof GET){
             serviceMethod.method ="GET";
             serviceMethod.relativeUrl = ((GET) method.getDeclaredAnnotations()[0]).value();
