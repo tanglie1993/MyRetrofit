@@ -91,6 +91,10 @@ public class Retrofit {
         return null;
     }
 
+    public HttpUrl baseUrl() {
+        return baseUrl;
+    }
+
     public static class Builder {
 
         private HttpUrl baseUrl;
@@ -113,8 +117,26 @@ public class Retrofit {
         }
 
         public Builder baseUrl(HttpUrl url) {
+            if(url == null){
+                throw new NullPointerException("baseUrl == null");
+            }
             this.baseUrl = url;
+            List<String> pathSegments = baseUrl.pathSegments();
+            if (!"".equals(pathSegments.get(pathSegments.size() - 1))) {
+                throw new IllegalArgumentException("baseUrl must end in /: " + baseUrl);
+            }
             return this;
+        }
+
+        public Builder baseUrl(String url) {
+            if(url == null){
+                throw new NullPointerException("baseUrl == null");
+            }
+            HttpUrl parsed = HttpUrl.parse(url);
+            if (parsed == null) {
+                throw new IllegalArgumentException("Illegal URL: " + url);
+            }
+            return baseUrl(HttpUrl.parse(url));
         }
 
         public Builder addConverterFactory(Converter.Factory factory){
@@ -147,5 +169,7 @@ public class Retrofit {
             this.callAdapterFactoryList.add(callAdapterFactory);
             return this;
         }
+
+
     }
 }

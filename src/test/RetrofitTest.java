@@ -681,67 +681,67 @@ public final class RetrofitTest {
       assertThat(e).hasMessage("Base URL required.");
     }
   }
-//
-//  @Test
-//  public void baseUrlNullThrows() {
-//    try {
-//      new Retrofit.Builder().baseUrl((String) null);
-//      fail();
-//    } catch (NullPointerException e) {
-//      assertThat(e).hasMessage("baseUrl == null");
-//    }
-//    try {
-//      new Retrofit.Builder().baseUrl((HttpUrl) null);
-//      fail();
-//    } catch (NullPointerException e) {
-//      assertThat(e).hasMessage("baseUrl == null");
-//    }
-//  }
-//
-//  @Test
-//  public void baseUrlInvalidThrows() {
-//    try {
-//      new Retrofit.Builder().baseUrl("ftp://foo/bar");
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("Illegal URL: ftp://foo/bar");
-//    }
-//  }
-//
-//  @Test
-//  public void baseUrlNoTrailingSlashThrows() {
-//    try {
-//      new Retrofit.Builder().baseUrl("http://example.com/api");
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("baseUrl must end in /: http://example.com/api");
-//    }
-//    HttpUrl parsed = HttpUrl.parse("http://example.com/api");
-//    try {
-//      new Retrofit.Builder().baseUrl(parsed);
-//      fail();
-//    } catch (IllegalArgumentException e) {
-//      assertThat(e).hasMessage("baseUrl must end in /: http://example.com/api");
-//    }
-//  }
-//
-//  @Test
-//  public void baseUrlStringPropagated() {
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl("http://example.com/")
-//        .build();
-//    HttpUrl baseUrl = retrofit.baseUrl();
-//    assertThat(baseUrl).isEqualTo(HttpUrl.parse("http://example.com/"));
-//  }
-//
-//  @Test
-//  public void baseHttpUrlPropagated() {
-//    HttpUrl url = HttpUrl.parse("http://example.com/");
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(url)
-//        .build();
-//    assertThat(retrofit.baseUrl()).isSameAs(url);
-//  }
+
+  @Test
+  public void baseUrlNullThrows() {
+    try {
+      new Retrofit.Builder().baseUrl((String) null);
+      fail();
+    } catch (NullPointerException e) {
+      assertThat(e).hasMessage("baseUrl == null");
+    }
+    try {
+      new Retrofit.Builder().baseUrl((HttpUrl) null);
+      fail();
+    } catch (NullPointerException e) {
+      assertThat(e).hasMessage("baseUrl == null");
+    }
+  }
+
+  @Test
+  public void baseUrlInvalidThrows() {
+    try {
+      new Retrofit.Builder().baseUrl("ftp://foo/bar");
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("Illegal URL: ftp://foo/bar");
+    }
+  }
+
+  @Test
+  public void baseUrlNoTrailingSlashThrows() {
+    try {
+      new Retrofit.Builder().baseUrl("http://example.com/api");
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("baseUrl must end in /: http://example.com/api");
+    }
+    HttpUrl parsed = HttpUrl.parse("http://example.com/api");
+    try {
+      new Retrofit.Builder().baseUrl(parsed);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("baseUrl must end in /: http://example.com/api");
+    }
+  }
+
+  @Test
+  public void baseUrlStringPropagated() {
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl("http://example.com/")
+        .build();
+    HttpUrl baseUrl = retrofit.baseUrl();
+    assertThat(baseUrl).isEqualTo(HttpUrl.parse("http://example.com/"));
+  }
+
+  @Test
+  public void baseHttpUrlPropagated() {
+    HttpUrl url = HttpUrl.parse("http://example.com/");
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(url)
+        .build();
+    assertThat(retrofit.baseUrl()).isSameAs(url);
+  }
 //
 //  @Test
 //  public void clientNullThrows() {
