@@ -6,6 +6,7 @@ import main.retrofit.okhttp.GET;
 import main.retrofit.okhttp.POST;
 import main.retrofit.okhttp.Path;
 import okhttp3.*;
+import okio.BufferedSink;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.io.IOException;
@@ -25,8 +26,6 @@ public class ServiceMethod<R, T> {
     private static Map<Method, ServiceMethod> cache = new HashMap<>();
 
     String method;
-    String requestBody;
-    String relativeUrl;
     String baseUrl;
     Converter<String, RequestBody> requestBodyConverter;
     Converter<ResponseBody, ?> responseBodyConverter;
@@ -34,6 +33,7 @@ public class ServiceMethod<R, T> {
     Annotation[] declaredAnnotations;
     CallAdapter<R, T> callAdapter;
     OkHttpClient client;
+    String relativeUrl;
 
     public static OkHttpCall generateOkHttpCall(Retrofit retrofit, Method method, Object[] args) {
         Type returnType = method.getGenericReturnType();
@@ -60,50 +60,22 @@ public class ServiceMethod<R, T> {
         if(cache.containsKey(method)){
             return new OkHttpCall(cache.get(method), args);
         }
-        if(method.getDeclaredAnnotations().length > 0){
-            if(method.getDeclaredAnnotations()[0] instanceof GET){
-                return generateGet(retrofit, method, args);
-            }else if(method.getDeclaredAnnotations()[0] instanceof POST){
-                return generatePost(retrofit, method, args);
-            }
-        }
-        return null;
-    }
-
-    private static OkHttpCall generateGet(Retrofit retrofit, Method method, Object[] args) {
         ServiceMethod serviceMethod = new ServiceMethod();
         serviceMethod.parameterAnnotations = method.getParameterAnnotations();
         serviceMethod.declaredAnnotations = method.getDeclaredAnnotations();
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
         serviceMethod.callAdapter = retrofit.getCallAdapter(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
-        GET get = (GET) method.getDeclaredAnnotations()[0];
-        serviceMethod.relativeUrl = get.value();
         serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
                 null, method.getDeclaredAnnotations());
         serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
                 method.getDeclaredAnnotations());
-        serviceMethod.method ="GET";
-        serviceMethod.client = retrofit.client;
-        OkHttpCall result = new OkHttpCall(serviceMethod, args);
-//        cache.put(method, serviceMethod);
-        return result;
-    }
-
-    private static OkHttpCall generatePost(Retrofit retrofit, Method method, Object[] args) {
-        ServiceMethod serviceMethod = new ServiceMethod();
-        serviceMethod.baseUrl = retrofit.baseUrl.toString();
-        serviceMethod.parameterAnnotations = method.getParameterAnnotations();
-        serviceMethod.declaredAnnotations = method.getDeclaredAnnotations();
-        POST post = (POST) method.getDeclaredAnnotations()[0];
-        serviceMethod.relativeUrl = post.value();
-        serviceMethod.callAdapter = retrofit.getCallAdapter(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
-        serviceMethod.requestBody = "";
-        serviceMethod.requestBodyConverter = retrofit.searchForRequestConverter(method.getGenericReturnType(),
-                method.getParameterAnnotations()[0],
-                method.getDeclaredAnnotations());
-        serviceMethod.responseBodyConverter = retrofit.searchForResponseConverter(method.getGenericReturnType(),
-                method.getDeclaredAnnotations());
-        serviceMethod.method = "POST";
+        if(method.getDeclaredAnnotations()[0] instanceof GET){
+            serviceMethod.method ="GET";
+            serviceMethod.relativeUrl = ((GET) method.getDeclaredAnnotations()[0]).value();
+        }else if(method.getDeclaredAnnotations()[0] instanceof POST){
+            serviceMethod.method ="POST";
+            serviceMethod.relativeUrl = ((POST) method.getDeclaredAnnotations()[0]).value();
+        }
         serviceMethod.client = retrofit.client;
         OkHttpCall result = new OkHttpCall(serviceMethod, args);
 //        cache.put(method, serviceMethod);
@@ -112,28 +84,38 @@ public class ServiceMethod<R, T> {
 
     okhttp3.Call toCall(Object[] args) throws IOException {
         RequestBuilder requestBuilder = new RequestBuilder(method, baseUrl, relativeUrl);
-        if(requestBody != null){
-            requestBuilder.setBody(requestBodyConverter.convert(requestBody));
-        }
-
+        String requestBody = null;
         int paramIndex = 0;
         outer:  for(Annotation[] parameterAnnotation : parameterAnnotations){
             if(parameterAnnotation.length > 0){
                 for(Annotation annotation : parameterAnnotation){
                     if(annotation instanceof Body){
                         requestBody = (String) args[paramIndex];
-                        break outer;
                     }
                     if(annotation instanceof Path){
                         String pattern = "\\{" + ((Path) annotation).value() + "\\}";
                         Pattern r = Pattern.compile(pattern);
                         Matcher m = r.matcher(relativeUrl);
                         relativeUrl = m.replaceAll(args[paramIndex].toString());
-                        break outer;
                     }
                 }
             }
             paramIndex++;
+        }
+        if(requestBody != null){
+            requestBuilder.setBody(requestBodyConverter.convert(requestBody));
+        }else if(method.equals("POST")){
+            requestBuilder.setBody(new RequestBody() {
+                @Override
+                public MediaType contentType() {
+                    return null;
+                }
+
+                @Override
+                public void writeTo(BufferedSink bufferedSink) throws IOException {
+
+                }
+            });
         }
         return client.newCall(requestBuilder.build());
     }
