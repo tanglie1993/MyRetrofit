@@ -33,14 +33,18 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static junit.framework.TestCase.assertTrue;
 import static main.retrofit.Utils.getRawType;
+import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_AT_START;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -1342,39 +1346,39 @@ public final class RetrofitTest {
 //    verifyNoMoreInteractions(executor);
 //  }
 //
-//  @Test
-//  public void callbackExecutorUsedForFailure() throws InterruptedException {
-//    Executor executor = spy(new Executor() {
-//      @Override public void execute(Runnable command) {
-//        command.run();
-//      }
-//    });
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .callbackExecutor(executor)
-//        .build();
-//    CallMethod service = retrofit.create(CallMethod.class);
-//    Call<ResponseBody> call = service.getResponseBody();
-//
-//    server.enqueue(new MockResponse().setSocketPolicy(DISCONNECT_AT_START));
-//
-//    final CountDownLatch latch = new CountDownLatch(1);
-//    call.enqueue(new Callback<ResponseBody>() {
-//      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//        throw new AssertionError();
-//      }
-//
-//      @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
-//        latch.countDown();
-//      }
-//    });
-//    assertTrue(latch.await(2, TimeUnit.SECONDS));
-//
-//    verify(executor).execute(any(Runnable.class));
-//    verifyNoMoreInteractions(executor);
-//  }
-//
-//  /** Confirm that Retrofit encodes parameters when the call is executed, and not earlier. */
+  @Test
+  public void callbackExecutorUsedForFailure() throws InterruptedException {
+    Executor executor = spy(new Executor() {
+      @Override public void execute(Runnable command) {
+        command.run();
+      }
+    });
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .callbackExecutor(executor)
+        .build();
+    CallMethod service = retrofit.create(CallMethod.class);
+    Call<ResponseBody> call = service.getResponseBody();
+
+    server.enqueue(new MockResponse().setSocketPolicy(DISCONNECT_AT_START));
+
+    final CountDownLatch latch = new CountDownLatch(1);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        throw new AssertionError();
+      }
+
+      @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
+        latch.countDown();
+      }
+    });
+    assertTrue(latch.await(2, TimeUnit.SECONDS));
+
+    verify(executor).execute(any(Runnable.class));
+    verifyNoMoreInteractions(executor);
+  }
+
+  /** Confirm that Retrofit encodes parameters when the call is executed, and not earlier. */
   @Test
   public void argumentCapture() throws Exception {
     AtomicInteger i = new AtomicInteger();

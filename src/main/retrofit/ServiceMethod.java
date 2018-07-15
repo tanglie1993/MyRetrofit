@@ -70,7 +70,7 @@ public class ServiceMethod<R, T> {
         serviceMethod.parameterAnnotations = method.getParameterAnnotations();
         serviceMethod.declaredAnnotations = method.getDeclaredAnnotations();
         serviceMethod.baseUrl = retrofit.baseUrl.toString();
-        serviceMethod.callAdapter = retrofit.getCallAdapter(method.getReturnType(), method.getDeclaredAnnotations(), retrofit);
+        serviceMethod.callAdapter = retrofit.getCallAdapter(method.getGenericReturnType(), method.getDeclaredAnnotations(), retrofit);
         if(method.getParameterAnnotations().length == 0){
             serviceMethod.requestBodyConverter = new ToStringConverterFactory().requestBodyConverter(method.getReturnType(),
                     null, method.getDeclaredAnnotations(), retrofit);

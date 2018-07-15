@@ -9,6 +9,7 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 /**
  * Created by pc on 2018/5/29.
@@ -22,7 +23,8 @@ public class Retrofit {
     private List<Converter.Factory> factoryList;
     private boolean validateEagerly;
 
-    public Retrofit(HttpUrl baseUrl, List<Converter.Factory> factoryList, OkHttpClient client, boolean validateEagerly, List<CallAdapter.Factory> callAdapterFactoryList) {
+    public Retrofit(HttpUrl baseUrl, List<Converter.Factory> factoryList, OkHttpClient client,
+                    boolean validateEagerly, List<CallAdapter.Factory> callAdapterFactoryList) {
         this.baseUrl = baseUrl;
         this.factoryList = factoryList;
         this.client = client;
@@ -80,7 +82,7 @@ public class Retrofit {
         return new Builder(this);
     }
 
-    public CallAdapter getCallAdapter(Class<?> returnType, Annotation[] declaredAnnotations, Retrofit retrofit) {
+    public CallAdapter getCallAdapter(Type returnType, Annotation[] declaredAnnotations, Retrofit retrofit) {
         for(CallAdapter.Factory factory : callAdapterFactoryList){
             CallAdapter adapter = factory.get(returnType, declaredAnnotations, retrofit);
             if(adapter != null){
@@ -105,6 +107,7 @@ public class Retrofit {
         private OkHttpClient client = new OkHttpClient();
         private boolean validateEagerly;
         private List<CallAdapter.Factory> callAdapterFactoryList;
+        private Executor executor;
 
         public Builder() {
             this.callAdapterFactoryList = new ArrayList<>();
@@ -154,7 +157,17 @@ public class Retrofit {
             if(baseUrl == null){
                 throw new IllegalStateException("Base URL required.");
             }
-            return new Retrofit(baseUrl, factoryList, client, validateEagerly, callAdapterFactoryList);
+            Executor callbackExecutor = executor;
+            List<CallAdapter.Factory> callAdapterFactories = new ArrayList<>(callAdapterFactoryList);
+            callAdapterFactories.add(0, defaultCallAdapterFactory(callbackExecutor));
+            return new Retrofit(baseUrl, factoryList, client, validateEagerly, callAdapterFactories);
+        }
+
+        CallAdapter.Factory defaultCallAdapterFactory(Executor callbackExecutor) {
+            if (callbackExecutor != null) {
+                return new ExecutorCallAdapterFactory(callbackExecutor);
+            }
+            return CallAdapter.FACTORY_INSTANCE;
         }
 
         public Builder client(OkHttpClient client) {
@@ -180,5 +193,9 @@ public class Retrofit {
         }
 
 
+        public Builder callbackExecutor(Executor executor) {
+            this.executor = executor;
+            return this;
+        }
     }
 }

@@ -93,4 +93,12 @@ public class Utils {
         }
         return false;
     }
+
+    static Type getCallResponseType(Type returnType) {
+        if (!(returnType instanceof ParameterizedType)) {
+            throw new IllegalArgumentException(
+                    "Call return type must be parameterized as Call<Foo> or Call<? extends Foo>");
+        }
+        return getParameterUpperBound(0, (ParameterizedType) returnType);
+    }
 }

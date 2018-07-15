@@ -46,7 +46,7 @@ public interface CallAdapter<R, T> {
 
     @Override
     public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
-      if (returnType != Call.class) {
+      if (Utils.getRawType(returnType) != Call.class) {
         return null;
       }
 
