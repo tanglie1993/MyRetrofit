@@ -22,14 +22,17 @@ public class Retrofit {
      HttpUrl baseUrl;
     private List<Converter.Factory> factoryList;
     private boolean validateEagerly;
+    private Executor executor;
 
     public Retrofit(HttpUrl baseUrl, List<Converter.Factory> factoryList, OkHttpClient client,
-                    boolean validateEagerly, List<CallAdapter.Factory> callAdapterFactoryList) {
+                    boolean validateEagerly, List<CallAdapter.Factory> callAdapterFactoryList,
+                    Executor executor) {
         this.baseUrl = baseUrl;
         this.factoryList = factoryList;
         this.client = client;
         this.validateEagerly = validateEagerly;
         this.callAdapterFactoryList = callAdapterFactoryList;
+        this.executor = executor;
     }
 
     public <T> T create(final Class<T> service) {
@@ -100,6 +103,10 @@ public class Retrofit {
         return factoryList;
     }
 
+    public Executor callbackExecutor() {
+        return executor;
+    }
+
     public static class Builder {
 
         private HttpUrl baseUrl;
@@ -160,7 +167,7 @@ public class Retrofit {
             Executor callbackExecutor = executor;
             List<CallAdapter.Factory> callAdapterFactories = new ArrayList<>(callAdapterFactoryList);
             callAdapterFactories.add(0, defaultCallAdapterFactory(callbackExecutor));
-            return new Retrofit(baseUrl, factoryList, client, validateEagerly, callAdapterFactories);
+            return new Retrofit(baseUrl, factoryList, client, validateEagerly, callAdapterFactories, executor);
         }
 
         CallAdapter.Factory defaultCallAdapterFactory(Executor callbackExecutor) {

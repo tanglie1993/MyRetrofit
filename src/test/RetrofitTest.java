@@ -1281,7 +1281,7 @@ public final class RetrofitTest {
 //      assertThat(e).hasMessage("executor == null");
 //    }
 //  }
-//
+
 //  @Test
 //  public void callbackExecutorPropagatesDefaultJvm() {
 //    Retrofit retrofit = new Retrofit.Builder()
@@ -1304,48 +1304,48 @@ public final class RetrofitTest {
 //    assertThat(retrofit.callbackExecutor()).isSameAs(executor);
 //  }
 //
-//  @Test
-//  public void callbackExecutorPropagated() {
-//    Executor executor = mock(Executor.class);
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl("http://example.com/")
-//        .callbackExecutor(executor)
-//        .build();
-//    assertThat(retrofit.callbackExecutor()).isSameAs(executor);
-//  }
-//
-//  @Test
-//  public void callbackExecutorUsedForSuccess() throws InterruptedException {
-//    Executor executor = spy(new Executor() {
-//      @Override public void execute(Runnable command) {
-//        command.run();
-//      }
-//    });
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .callbackExecutor(executor)
-//        .build();
-//    CallMethod service = retrofit.create(CallMethod.class);
-//    Call<ResponseBody> call = service.getResponseBody();
-//
-//    server.enqueue(new MockResponse());
-//
-//    final CountDownLatch latch = new CountDownLatch(1);
-//    call.enqueue(new Callback<ResponseBody>() {
-//      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//        latch.countDown();
-//      }
-//
-//      @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
-//        t.printStackTrace();
-//      }
-//    });
-//    assertTrue(latch.await(2, TimeUnit.SECONDS));
-//
-//    verify(executor).execute(any(Runnable.class));
-//    verifyNoMoreInteractions(executor);
-//  }
-//
+  @Test
+  public void callbackExecutorPropagated() {
+    Executor executor = mock(Executor.class);
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl("http://example.com/")
+        .callbackExecutor(executor)
+        .build();
+    assertThat(retrofit.callbackExecutor()).isSameAs(executor);
+  }
+
+  @Test
+  public void callbackExecutorUsedForSuccess() throws InterruptedException {
+    Executor executor = spy(new Executor() {
+      @Override public void execute(Runnable command) {
+        command.run();
+      }
+    });
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .callbackExecutor(executor)
+        .build();
+    CallMethod service = retrofit.create(CallMethod.class);
+    Call<ResponseBody> call = service.getResponseBody();
+
+    server.enqueue(new MockResponse());
+
+    final CountDownLatch latch = new CountDownLatch(1);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        latch.countDown();
+      }
+
+      @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
+        t.printStackTrace();
+      }
+    });
+    assertTrue(latch.await(2, TimeUnit.SECONDS));
+
+    verify(executor).execute(any(Runnable.class));
+    verifyNoMoreInteractions(executor);
+  }
+
   @Test
   public void callbackExecutorUsedForFailure() throws InterruptedException {
     Executor executor = spy(new Executor() {
