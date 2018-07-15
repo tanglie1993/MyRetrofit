@@ -68,7 +68,6 @@ public class Retrofit {
     }
 
     Converter<?, RequestBody> searchForRequestConverter(Type genericReturnType, Annotation[] parameterAnnotations, Annotation[] declaredAnnotations) {
-
         for(Converter.Factory factory : factoryList){
             if(factory.requestBodyConverter(genericReturnType, parameterAnnotations, declaredAnnotations, this) != null){
                 return factory.requestBodyConverter(genericReturnType, parameterAnnotations, declaredAnnotations, this);
@@ -93,6 +92,10 @@ public class Retrofit {
 
     public HttpUrl baseUrl() {
         return baseUrl;
+    }
+
+    public List<Converter.Factory> converterFactories() {
+        return factoryList;
     }
 
     public static class Builder {

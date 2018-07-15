@@ -2,10 +2,7 @@ package main.retrofit;
 
 import com.google.caliper.Param;
 import com.google.inject.internal.MoreTypes;
-import main.retrofit.okhttp.Body;
-import main.retrofit.okhttp.GET;
-import main.retrofit.okhttp.POST;
-import main.retrofit.okhttp.Path;
+import main.retrofit.okhttp.*;
 import okhttp3.*;
 import okio.BufferedSink;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
@@ -35,7 +32,6 @@ public class ServiceMethod<R, T> {
     Annotation[] declaredAnnotations;
     CallAdapter<R, T> callAdapter;
     OkHttpClient client;
-    String relativeUrl;
 
     public static OkHttpCall generateOkHttpCall(Retrofit retrofit, Method method, Object[] args) {
         Type returnType = method.getGenericReturnType();
@@ -87,10 +83,8 @@ public class ServiceMethod<R, T> {
 
         if(method.getDeclaredAnnotations()[0] instanceof GET){
             serviceMethod.method ="GET";
-            serviceMethod.relativeUrl = ((GET) method.getDeclaredAnnotations()[0]).value();
         }else if(method.getDeclaredAnnotations()[0] instanceof POST){
             serviceMethod.method ="POST";
-            serviceMethod.relativeUrl = ((POST) method.getDeclaredAnnotations()[0]).value();
         }
         serviceMethod.client = retrofit.client;
         OkHttpCall result = new OkHttpCall(serviceMethod, args);
@@ -99,29 +93,32 @@ public class ServiceMethod<R, T> {
     }
 
     okhttp3.Call toCall(Object[] args) throws IOException {
-        RequestBuilder requestBuilder = new RequestBuilder(method, baseUrl, relativeUrl);
         RequestBody requestBody = null;
         int paramIndex = 0;
-        outer:  for(Annotation[] parameterAnnotation : parameterAnnotations){
-            if(parameterAnnotation.length > 0){
-                for(Annotation annotation : parameterAnnotation){
-                    if(annotation instanceof Body){
-                        if(args[paramIndex] instanceof String){
+        String relativeUrl = "";
+        for (Annotation[] parameterAnnotation : parameterAnnotations) {
+            if (parameterAnnotation.length > 0) {
+                for (Annotation annotation : parameterAnnotation) {
+                    if (annotation instanceof Body) {
+                        if (args[paramIndex] instanceof String) {
                             requestBody = requestBodyConverter.convert((String) args[paramIndex]);
-                        }else if(args[paramIndex] instanceof RequestBody){
+                        } else if (args[paramIndex] instanceof RequestBody) {
                             requestBody = (RequestBody) args[paramIndex];
                         }
-                    }
-                    if(annotation instanceof Path){
+                    } else if (annotation instanceof Path) {
                         String pattern = "\\{" + ((Path) annotation).value() + "\\}";
                         Pattern r = Pattern.compile(pattern);
                         Matcher m = r.matcher(relativeUrl);
                         relativeUrl = m.replaceAll(args[paramIndex].toString());
+                    } else if (annotation instanceof Query) {
+                        String query = ((Query) annotation).value();
+                        relativeUrl += "?" + query + "=" + args[paramIndex];
                     }
                 }
             }
             paramIndex++;
         }
+        RequestBuilder requestBuilder = new RequestBuilder(method, baseUrl, relativeUrl);
         if(requestBody != null){
             requestBuilder.setBody(requestBody);
         }else if(method.equals("POST")){

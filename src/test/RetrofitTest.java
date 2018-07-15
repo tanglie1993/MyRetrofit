@@ -42,6 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static main.retrofit.Utils.getRawType;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -180,7 +181,7 @@ public final class RetrofitTest {
         .baseUrl(server.url("/"))
         .build();
 
-    org.junit.Assert.assertEquals(0, retrofit.newBuilder().converterFactories().size());
+    assertEquals(0, retrofit.newBuilder().converterFactories().size());
   }
 
   @Test
@@ -859,7 +860,7 @@ public final class RetrofitTest {
       assertThat(e).hasMessage("factory == null");
     }
   }
-
+//
 //  @Test
 //  public void converterFactoryDefault() {
 //    Retrofit retrofit = new Retrofit.Builder()
@@ -1374,38 +1375,38 @@ public final class RetrofitTest {
 //  }
 //
 //  /** Confirm that Retrofit encodes parameters when the call is executed, and not earlier. */
-//  @Test
-//  public void argumentCapture() throws Exception {
-//    AtomicInteger i = new AtomicInteger();
-//
-//    server.enqueue(new MockResponse().setBody("a"));
-//    server.enqueue(new MockResponse().setBody("b"));
-//
-//    Retrofit retrofit = new Retrofit.Builder()
-//        .baseUrl(server.url("/"))
-//        .addConverterFactory(new ToStringConverterFactory())
-//        .build();
-//    MutableParameters mutableParameters = retrofit.create(MutableParameters.class);
-//
-//    i.set(100);
-//    Call<String> call1 = mutableParameters.method(i);
-//
-//    i.set(101);
-//    Response<String> response1 = call1.execute();
-//
-//    i.set(102);
-//    assertEquals("a", response1.body());
-//    assertEquals("/?i=101", server.takeRequest().getPath());
-//
-//    i.set(200);
-//    Call<String> call2 = call1.clone();
-//
-//    i.set(201);
-//    Response<String> response2 = call2.execute();
-//
-//    i.set(202);
-//    assertEquals("b", response2.body());
-//
-//    assertEquals("/?i=201", server.takeRequest().getPath());
-//  }
+  @Test
+  public void argumentCapture() throws Exception {
+    AtomicInteger i = new AtomicInteger();
+
+    server.enqueue(new MockResponse().setBody("a"));
+    server.enqueue(new MockResponse().setBody("b"));
+
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(server.url("/"))
+        .addConverterFactory(new ToStringConverterFactory())
+        .build();
+    MutableParameters mutableParameters = retrofit.create(MutableParameters.class);
+
+    i.set(100);
+    Call<String> call1 = mutableParameters.method(i);
+
+    i.set(101);
+    Response<String> response1 = call1.execute();
+
+    i.set(102);
+    assertEquals("a", response1.body());
+    assertEquals("/?i=101", server.takeRequest().getPath());
+
+    i.set(200);
+    Call<String> call2 = call1.clone();
+
+    i.set(201);
+    Response<String> response2 = call2.execute();
+
+    i.set(202);
+    assertEquals("b", response2.body());
+
+    assertEquals("/?i=201", server.takeRequest().getPath());
+  }
 }

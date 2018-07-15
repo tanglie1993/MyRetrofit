@@ -23,6 +23,7 @@ public class OkHttpCall implements Call<Object> {
 
     public OkHttpCall(OkHttpCall okHttpCall) {
         this.serviceMethod = okHttpCall.serviceMethod;
+        this.args = okHttpCall.args;
     }
 
     public OkHttpCall(ServiceMethod serviceMethod, Object[] args) {

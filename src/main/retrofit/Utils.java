@@ -1,7 +1,9 @@
 package main.retrofit;
 
 import com.sun.istack.internal.Nullable;
+import main.retrofit.okhttp.Streaming;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 
 /**
@@ -80,5 +82,15 @@ public class Utils {
         String className = type == null ? "null" : type.getClass().getName();
         throw new IllegalArgumentException("Expected a Class, ParameterizedType, or "
                 + "GenericArrayType, but <" + type + "> is of type " + className);
+    }
+
+    static boolean isAnnotationPresent(Annotation[] annotations,
+                                       Class<? extends Annotation> cls) {
+        for (Annotation annotation : annotations) {
+            if (cls.isInstance(annotation)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
